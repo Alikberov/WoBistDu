@@ -57,5 +57,5 @@ async function my_server(req, res) {
 const server = http.createServer(my_server);
 
 server.listen(port, hosting, () => {
-	console.log(`Server running at http://${hostname}:${port}/`);
+	console.log(`Server running at http://${hosting}:${port}/`);
 });
