@@ -22,8 +22,8 @@ const	html =
 
 var	users	= [];
 
-var callback = function(res){
-	users.unshift("<a href='https://yandex.ru/maps/?z=12&l=map&ll=" + [res.longitude, res.latitude].join() + "'>" + (users.length + 1) + "</a>");
+var callback = function(user, res) {
+	users.unshift("<a href='https://yandex.ru/maps/?z=12&l=map&ll=" + [user.longitude, user.latitude].join() + "'>" + (users.length + 1) + "</a>");
 	res.statusCode = 200;
 	res.setHeader("Content-Type", "text/html; charset=utf-8");
 	res.end(html.join("\r\n").replace("...", users.join("<br />")));
@@ -31,7 +31,7 @@ var callback = function(res){
 
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
-	ipapi.location(callback)       // Complete location for your IP address
+	ipapi.location(callback, res)       // Complete location for your IP address
 /*	var	requrl	= unescape(req.url.replace(/\+/g, " "));
 	var	szTheme	= "";
 	var	ipAddr	= req.headers["x-forwarded-for"];
