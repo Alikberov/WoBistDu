@@ -1,7 +1,7 @@
-const	http	= require('http');
-const	ipapi	= require('ipapi.co');
-const	hosting	= '127.0.0.1';
-const	port	= 3000;
+const	http	= require("http");
+const	ipapi	= require("ipapi.co");
+const	hosting	= "";
+const	port	= process.env.PORT || 5000
 
 const	html =
 	["<!doctype html>"
