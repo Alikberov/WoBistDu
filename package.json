@@ -1,0 +1,26 @@
+{
+	"name"		:"WoBistDu",
+	"version"	:"1.0.0",
+	"lockfileVersion": 1,
+	"requires"	:true,
+	"dependencies"	: {
+		"ipapi.co"	:"^0.3.0"
+	},
+	"description"	:"WoBistDu 2020",
+	"main"		:"app.js",
+	"scripts"	: {
+		"start"	:"node app && node stub",
+		"basic"	:"node app",
+		"crash"	:"node stub"
+	},
+	"repository"	: {
+		"type"	:"git",
+		"url"	:""
+	},
+	"author"	:"Alikberov",
+	"license"	:"ISC",
+	"bugs"		: {
+		"url"	:""
+	},
+	"homepage"	:"https://github.com/Alikberov/WoBistDu"
+}
