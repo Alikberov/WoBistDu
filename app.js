@@ -14,6 +14,7 @@ const	html =
 	,"<meta content='Static'							name='googlebot' />"
 	,"<meta content='NoIndex,NoArchive'					name='Robots'	 />"
 	,"<meta content='https://github.com/Alikberov'				name='Author'	 />"
+	,"<meta content='300'						http-equiv='refresh'	/>"
 	,"<head><title>WoBistDu?</title>"
 	,"<style>"
 	,"p	{"
@@ -42,7 +43,7 @@ var callback = function(res) {
 				"z=" + 16
 			].join("&");
 		var	msg = this.msg.replace(/[<>&]+/gm, " ").substr(0, 16);
-		users.unshift("<a target='_blank' href='https://yandex.ru/maps/?" + args + "'>" + res.city + "." + res.country + "#" + (users.length + 1) + "</a>" + msg);
+		users.unshift("<a target='_blank' name='#" + (users.length + 1) + "' href='https://yandex.ru/maps/?" + args + "'><img src='http://bootstraptema.ru/plugins/2016/flag-icon-css/4x3-2/" + res.country.toLowerCase() + ".svg' width='16' height='12' />" + res.city + "." + res.country + "#" + (users.length + 1) + "</a>" + msg);
 	}
 	this.res.statusCode = 200;
 	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
@@ -60,8 +61,8 @@ async function my_server(req, res) {
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
 	var	msg	= req.url.match(/say=([^&?]*)/);
 	if(ips.join().indexOf(theIP) < 0) {
-		if(ips.length >= 10)
-			ips.length = 9;
+		if(ips.length >= 100)
+			ips.length = 99;
 		ips.unshift(theIP);
 		cb = callback.bind({res: res, neo: true, msg: (msg ? ":" + unescape(msg[1]) : "")});
 	} else
