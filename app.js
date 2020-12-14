@@ -24,8 +24,8 @@ var	users	= [];
 var	ips	= [];
 
 var callback = function(res) {
-	users.unshift("<a href='https://yandex.ru/maps/?z=12&l=map&ll=" + [res.longitude, res.latitude].join() + "'>" + res.city + "." + res.country + "#" + (users.length + 1) + "</a>");
-	console.log(html.join("\r\n").replace("...", users.join("<br />")));
+	if(this.neo)
+		users.unshift("<a href='https://yandex.ru/maps/?z=12&l=map&ll=" + [res.longitude, res.latitude].join() + "'>" + res.city + "." + res.country + "#" + (users.length + 1) + "</a>");
 	this.res.statusCode = 200;
 	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
 	this.res.end(html.join("\r\n").replace("...", users.join("<br />")));
@@ -33,7 +33,7 @@ var callback = function(res) {
 
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
-	var	cb = callback.bind({res: res});
+	var	cb;
 	var	ipAddr	= req.headers["x-forwarded-for"];
 	if(ipAddr) 
 		ipAddr	= ipAddr.split(",").pop();
@@ -42,8 +42,10 @@ async function my_server(req, res) {
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
 	if(ips.join().indexOf(theIP) < 0) {
 		ips.unshift(theIP);
-		ipapi.location(cb, theIP);       // Complete location for your IP address
-	}
+		cb = callback.bind({res: res, neo: false});
+	} else
+		cb = callback.bind({res: res, neo: true});
+	ipapi.location(cb, theIP);       // Complete location for your IP address
 /*	var	requrl	= unescape(req.url.replace(/\+/g, " "));
 	var	szTheme	= "";
 	var	fail	= false;
