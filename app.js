@@ -1,5 +1,5 @@
-//const	http	= require("http");
-const	https	= require("https");
+const	http	= require("http");
+//const	https	= require("https");
 const	ipapi	= require("ipapi.co");
 const	hosting	= "";
 const	port	= process.env.PORT || 5000
@@ -84,15 +84,15 @@ async function my_server(req, res) {
 	}*/
 };
 
-//const	server	= http.createServer(my_server);
-const	sserver	= https.createServer(my_server);
+const	server	= http.createServer(my_server);
+//const	sserver	= https.createServer(my_server);
 
-/*server.listen(port, hosting, () => {
+server.listen(port, hosting, () => {
 	console.log(`Server running at http://${hosting}:${port}/`);
 	ipapi.location(console.log);
-});*/
+});
 
-sserver.listen(port, hosting, () => {
+/*sserver.listen(port, hosting, () => {
 	console.log(`Server running at https://${hosting}:${port}/`);
 	ipapi.location(console.log);
-});
+});*/
