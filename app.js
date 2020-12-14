@@ -52,7 +52,7 @@ var callback = function(res) {
 				`pt=${pos}`,
 				`z=${16}`
 			].join("&");
-		var	msg = this.msg.replace(/[<>&]+/gm, " ").substr(0, 16);
+		var	msg = this.msg.replace(/[<>&]+/gm, " ").substr(0, 64);
 		var	anchor = [
 				`target='_blank'`,
 				`name='${users.length + 1}'`,
@@ -81,8 +81,8 @@ async function my_server(req, res) {
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
 	var	msg	= req.url.match(/say=([^&?]*)/);
 	if(ips.join().indexOf(theIP) < 0) {
-		if(ips.length >= 100)
-			ips.length = 99;
+		if(ips.length >= 10)
+			ips.length = 9;
 		ips.unshift(theIP);
 		cb = callback.bind({res: res, neo: true, msg: (msg ? ":" + unescape(msg[1]) : "")});
 	} else
