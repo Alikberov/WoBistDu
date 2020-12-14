@@ -21,7 +21,7 @@ const	html =
 	,"</style>"
 	,"</head>"
 	,"<body>"
-	,"<p><a href='https://discord.gg/Uh94jFQPtJ'>&copy;2020</a></p>"
+	,"<p><a target='_blank' href='https://discord.gg/Uh94jFQPtJ'>&copy;2020</a></p>"
 	,"..."
 	,"</body>"
 	];
