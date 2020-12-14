@@ -44,6 +44,7 @@ var callback = function(res) {
 			].join("&");
 		var	msg = this.msg.replace(/[<>&]+/gm, " ").substr(0, 16);
 		users.unshift("<a target='_blank' href='https://yandex.ru/maps/?" + args + "'>" + res.city + "." + res.country + "#" + (users.length + 1) + "</a>" + msg);
+	}
 	this.res.statusCode = 200;
 	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
 	this.res.end(html.join("\r\n").replace("...", users.join("<br />")));
