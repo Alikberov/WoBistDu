@@ -42,7 +42,7 @@ var callback = function(res) {
 				"spn=" + pos,
 				"z=15"
 			].join("&");
-		var	msg = this.msg.replace(/[<>&]+/gm, "…").substr(0, 16);
+		var	msg = this.msg.replace(/[<>&]+/gm, " ").substr(0, 16);
 		users.unshift("<a target='_blank' href='https://yandex.ru/maps/?" + args + "'>" + res.city + "." + res.country + "#" + (users.length + 1) + "</a>" + msg);
 	this.res.statusCode = 200;
 	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
@@ -63,7 +63,7 @@ async function my_server(req, res) {
 		if(ips.length >= 10)
 			ips.length = 9;
 		ips.unshift(theIP);
-		cb = callback.bind({res: res, neo: true, msg: (msg ? ":" + unescape(msg) : "")});
+		cb = callback.bind({res: res, neo: true, msg: (msg ? ":" + unescape(msg[1]) : "")});
 	} else
 		cb = callback.bind({res: res, neo: false, msg: ""});
 	ipapi.location(cb, theIP);       // Complete location for your IP address
