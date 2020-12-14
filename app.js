@@ -34,7 +34,7 @@ var callback = function(res) {
 
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
-	ipapi.location(console.log, res)       // Complete location for your IP address
+	ipapi.location(console.log);       // Complete location for your IP address
 /*	var	requrl	= unescape(req.url.replace(/\+/g, " "));
 	var	szTheme	= "";
 	var	ipAddr	= req.headers["x-forwarded-for"];
@@ -61,4 +61,5 @@ const server = http.createServer(my_server);
 
 server.listen(port, hosting, () => {
 	console.log(`Server running at http://${hosting}:${port}/`);
+	ipapi.location(console.log);
 });
