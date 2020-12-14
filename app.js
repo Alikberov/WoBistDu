@@ -1,4 +1,5 @@
 const	http	= require("http");
+const	https	= require("https");
 const	ipapi	= require("ipapi.co");
 const	hosting	= "";
 const	port	= process.env.PORT || 5000
@@ -30,8 +31,19 @@ var	users	= [];
 var	ips	= [];
 
 var callback = function(res) {
-	if(this.neo)
-		users.unshift("<a target='_blank' href='https://yandex.ru/maps/?l=map&spn=" + [res.longitude, res.latitude].join() + "&z=15'>" + res.city + "." + res.country + "#" + (users.length + 1) + "</a>");
+	if(this.neo) {
+		var	pos = [
+				res.longitude,
+				res.latitude
+			].join();
+		var	args = [
+				"l=map",
+				"ll=" + pos,
+				"spn=" + pos,
+				"z=15"
+			].join("&");
+		var	msg = this.msg.replace(/[<>&]+/gm, "…").substr(0, 16);
+		users.unshift("<a target='_blank' href='https://yandex.ru/maps/?" + args + "'>" + res.city + "." + res.country + "#" + (users.length + 1) + "</a>" + msg);
 	this.res.statusCode = 200;
 	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
 	this.res.end(html.join("\r\n").replace("...", users.join("<br />")));
@@ -46,13 +58,14 @@ async function my_server(req, res) {
 	else
 		ipAddr	= req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
+	var	msg	= req.url.match(/say=([^&?]*)/);
 	if(ips.join().indexOf(theIP) < 0) {
 		if(ips.length >= 10)
 			ips.length = 9;
 		ips.unshift(theIP);
-		cb = callback.bind({res: res, neo: true});
+		cb = callback.bind({res: res, neo: true, msg: (msg ? ":" + unescape(msg) : "")});
 	} else
-		cb = callback.bind({res: res, neo: false});
+		cb = callback.bind({res: res, neo: false, msg: ""});
 	ipapi.location(cb, theIP);       // Complete location for your IP address
 /*	var	requrl	= unescape(req.url.replace(/\+/g, " "));
 	var	szTheme	= "";
@@ -70,9 +83,15 @@ async function my_server(req, res) {
 	}*/
 };
 
-const server = http.createServer(my_server);
+const	server	= http.createServer(my_server);
+const	sserver	= https.createServer(my_server);
 
 server.listen(port, hosting, () => {
 	console.log(`Server running at http://${hosting}:${port}/`);
+	ipapi.location(console.log);
+});
+
+sserver.listen(port, hosting, () => {
+	console.log(`Server running at https://${hosting}:${port}/`);
 	ipapi.location(console.log);
 });
