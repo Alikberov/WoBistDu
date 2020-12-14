@@ -22,13 +22,11 @@ const	html =
 
 var	users	= [];
 
-var callback = function(user, res) {
+var callback = function(res) {
 	console.log("--user-");
-	console.log(user);
-	console.log("--res--");
 	console.log(res);
 	console.log("--end--");
-	users.unshift("<a href='https://yandex.ru/maps/?z=12&l=map&ll=" + [user.longitude, user.latitude].join() + "'>" + (users.length + 1) + "</a>");
+	users.unshift("<a href='https://yandex.ru/maps/?z=12&l=map&ll=" + [res.longitude, res.latitude].join() + "'>" + (users.length + 1) + "</a>");
 	res.statusCode = 200;
 	res.setHeader("Content-Type", "text/html; charset=utf-8");
 	res.end(html.join("\r\n").replace("...", users.join("<br />")));
