@@ -35,15 +35,15 @@ var callback = function(res) {
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
 	var	cb = callback.bind({res: res});
-	ipapi.location(cb);       // Complete location for your IP address
-/*	var	requrl	= unescape(req.url.replace(/\+/g, " "));
-	var	szTheme	= "";
 	var	ipAddr	= req.headers["x-forwarded-for"];
 	if(ipAddr) 
 		ipAddr	= ipAddr.split(",").pop();
 	else
 		ipAddr	= req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
+	ipapi.location(cb, theIP);       // Complete location for your IP address
+/*	var	requrl	= unescape(req.url.replace(/\+/g, " "));
+	var	szTheme	= "";
 	var	fail	= false;
 	var	time	= datefmt(new Date(), Config.timefmt).shifted;
 	//
