@@ -38,8 +38,8 @@ var callback = function(res) {
 			].join();
 		var	args = [
 				"l=map",
-				"ll=" + pos,
-				"spn=" + pos,
+				//"ll=" + pos,
+				"pt=" + pos,
 				"z=15"
 			].join("&");
 		var	msg = this.msg.replace(/[<>&]+/gm, " ").substr(0, 16);
