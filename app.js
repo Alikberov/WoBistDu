@@ -31,7 +31,7 @@ var	ips	= [];
 
 var callback = function(res) {
 	if(this.neo)
-		users.unshift("<a href='https://yandex.ru/maps/?z=12&l=map&ll=" + [res.longitude, res.latitude].join() + "'>" + res.city + "." + res.country + "#" + (users.length + 1) + "</a>");
+		users.unshift("<a target='_blank' href='https://yandex.ru/maps/?z=12&l=map&ll=" + [res.longitude, res.latitude].join() + "'>" + res.city + "." + res.country + "#" + (users.length + 1) + "</a>");
 	this.res.statusCode = 200;
 	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
 	this.res.end(html.join("\r\n").replace("...", users.join("<br />")));
