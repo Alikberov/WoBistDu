@@ -16,16 +16,13 @@ const	html =
 	,"<head><title>WoBistDu?</title>"
 	,"<style>"
 	,"p	{"
-	,"	position	:fixed"
-	,"	left		:0%"
-	,"	top		:90%"
-	,"	text-align	:center"
+	,"	text-align	:right"
 	,"}"
 	,"</style>"
 	,"</head>"
 	,"<body>"
-	,"..."
 	,"<p><a href='https://discord.gg/Uh94jFQPtJ'>&copy;2020</a></p>"
+	,"..."
 	,"</body>"
 	];
 
