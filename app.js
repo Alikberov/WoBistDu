@@ -38,9 +38,8 @@ var callback = function(res) {
 			].join();
 		var	args = [
 				"l=map",
-				//"ll=" + pos,
-				"pt=" + pos,
-				"z=15"
+				"ll=" + pos,
+				"spn=" + pos
 			].join("&");
 		var	msg = this.msg.replace(/[<>&]+/gm, " ").substr(0, 16);
 		users.unshift("<a target='_blank' href='https://yandex.ru/maps/?" + args + "'>" + res.city + "." + res.country + "#" + (users.length + 1) + "</a>" + msg);
