@@ -53,7 +53,7 @@ var callback = function(res) {
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
 	var	cb;
-	var	ipAddr	= req.headers["x-forwarded-for"];
+	var	ipAddr	= req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 	if(ipAddr) 
 		ipAddr	= ipAddr.split(",").pop();
 	else
