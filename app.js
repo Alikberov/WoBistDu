@@ -1,8 +1,13 @@
 const	http	= require("http");
-//const	https	= require("https");
 const	ipapi	= require("ipapi.co");
+
 const	hosting	= "";
 const	port	= process.env.PORT || 5000
+
+const	flags	= "http://bootstraptema.ru/plugins/2016/flag-icon-css/4x3-2/";
+const	yandex	= "https://yandex.ru/maps/?";
+const	discord	= "https://discord.gg/Uh94jFQPtJ";
+const	timeout	= "300";
 
 const	html =
 	["<!doctype html>"
@@ -14,16 +19,21 @@ const	html =
 	,"<meta content='Static'							name='googlebot' />"
 	,"<meta content='NoIndex,NoArchive'					name='Robots'	 />"
 	,"<meta content='https://github.com/Alikberov'				name='Author'	 />"
-	,"<meta content='300'						http-equiv='refresh'	/>"
+	,`<meta content='${timeout}'						http-equiv='refresh'	/>`
 	,"<head><title>WoBistDu?</title>"
 	,"<style>"
 	,"p	{"
 	,"	text-align	:right"
 	,"}"
+	,"body	{"
+	,"	background-color:silver;"
+	,"	padding		:0 0 0 0;"
+	,"	overflow	:auto;"
+	,"}"
 	,"</style>"
 	,"</head>"
 	,"<body>"
-	,"<p><a target='_blank' href='https://discord.gg/Uh94jFQPtJ'>&copy;2020</a></p>"
+	,`<p><a target='_blank' href='${discord}'>&copy;2020</a></p>`
 	,"..."
 	,"</body>"
 	];
@@ -38,12 +48,22 @@ var callback = function(res) {
 				res.latitude
 			].join();
 		var	args = [
-				"l=map",
-				"pt=" + pos,
-				"z=" + 16
+				`l=map`,
+				`pt=${pos}`,
+				`z=${16}`
 			].join("&");
 		var	msg = this.msg.replace(/[<>&]+/gm, " ").substr(0, 16);
-		users.unshift("<a target='_blank' name='#" + (users.length + 1) + "' href='https://yandex.ru/maps/?" + args + "'><img src='http://bootstraptema.ru/plugins/2016/flag-icon-css/4x3-2/" + res.country.toLowerCase() + ".svg' width='16' height='12' />" + res.city + "." + res.country + "#" + (users.length + 1) + "</a>" + msg);
+		var	anchor = [
+				`target='_blank'`,
+				`name='${users.length + 1}'`,
+				`href='${yandex}${args}'`
+			].join(" ");
+		var	image = [
+				`src='${flags}${res.country.toLowerCase()}.svg'`,
+				`width='16'`,
+				`height='12'`
+			].join(" ");
+		users.unshift(`<a ${anchor}><img ${image} />${res.city}.${res.country}#${users.length + 1}</a>${msg}`);
 	}
 	this.res.statusCode = 200;
 	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
@@ -67,32 +87,12 @@ async function my_server(req, res) {
 		cb = callback.bind({res: res, neo: true, msg: (msg ? ":" + unescape(msg[1]) : "")});
 	} else
 		cb = callback.bind({res: res, neo: false, msg: ""});
-	ipapi.location(cb, theIP);       // Complete location for your IP address
-/*	var	requrl	= unescape(req.url.replace(/\+/g, " "));
-	var	szTheme	= "";
-	var	fail	= false;
-	var	time	= datefmt(new Date(), Config.timefmt).shifted;
-	//
-	if(!fail) {
-		res.statusCode = 200;
-		res.setHeader("Content-Type", "text/html; charset=utf-8");
-		res.end("")
-	} else {
-		res.statusCode = 404;
-		res.setHeader('Content-Type', 'image/png');
-		res.end();
-	}*/
+	ipapi.location(cb, theIP);
 };
 
 const	server	= http.createServer(my_server);
-//const	sserver	= https.createServer(my_server);
 
 server.listen(port, hosting, () => {
 	console.log(`Server running at http://${hosting}:${port}/`);
 	ipapi.location(console.log);
 });
-
-/*sserver.listen(port, hosting, () => {
-	console.log(`Server running at https://${hosting}:${port}/`);
-	ipapi.location(console.log);
-});*/
