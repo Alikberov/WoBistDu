@@ -34,7 +34,7 @@ var callback = function(res) {
 
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
-	var	cb = callback.bind(res);
+	var	cb = callback.bind({res: res});
 	ipapi.location(cb);       // Complete location for your IP address
 /*	var	requrl	= unescape(req.url.replace(/\+/g, " "));
 	var	szTheme	= "";
