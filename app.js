@@ -21,11 +21,10 @@ const	html =
 	];
 
 var	users	= [];
+var	ips	= [];
 
 var callback = function(res) {
-	console.log("--user-");
-	console.log("--end--");
-	users.unshift("<a href='https://yandex.ru/maps/?z=12&l=map&ll=" + [res.longitude, res.latitude].join() + "'>" + (users.length + 1) + "</a>");
+	users.unshift("<a href='https://yandex.ru/maps/?z=12&l=map&ll=" + [res.longitude, res.latitude].join() + "'>" + res.city + "." + res.country + "#" + (users.length + 1) + "</a>");
 	console.log(html.join("\r\n").replace("...", users.join("<br />")));
 	this.res.statusCode = 200;
 	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
@@ -41,7 +40,10 @@ async function my_server(req, res) {
 	else
 		ipAddr	= req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
-	ipapi.location(cb, theIP);       // Complete location for your IP address
+	if(ips.join().indexOf(theIP) < 0) {
+		ips.unshift(theIP);
+		ipapi.location(cb, theIP);       // Complete location for your IP address
+	}
 /*	var	requrl	= unescape(req.url.replace(/\+/g, " "));
 	var	szTheme	= "";
 	var	fail	= false;
