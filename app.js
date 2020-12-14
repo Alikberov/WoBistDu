@@ -27,14 +27,15 @@ var callback = function(res) {
 	console.log("--end--");
 	users.unshift("<a href='https://yandex.ru/maps/?z=12&l=map&ll=" + [res.longitude, res.latitude].join() + "'>" + (users.length + 1) + "</a>");
 	console.log(html.join("\r\n").replace("...", users.join("<br />")));
-	res.statusCode = 200;
-	res.setHeader("Content-Type", "text/html; charset=utf-8");
-	res.end(html.join("\r\n").replace("...", users.join("<br />")));
+	this.res.statusCode = 200;
+	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
+	this.res.end(html.join("\r\n").replace("...", users.join("<br />")));
 };
 
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
-	ipapi.location(console.log);       // Complete location for your IP address
+	var	cb = callback.bind(res);
+	ipapi.location(cb);       // Complete location for your IP address
 /*	var	requrl	= unescape(req.url.replace(/\+/g, " "));
 	var	szTheme	= "";
 	var	ipAddr	= req.headers["x-forwarded-for"];
