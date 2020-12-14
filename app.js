@@ -16,7 +16,12 @@ const	html =
 	,"<head><title>WoBistDu?</title>"
 	,"</head>"
 	,"<body>"
+	,"<iframe src='https://discord.com/widget?id=787858278696222751&theme=dark'"
+	,"	width='350' height='500' allowtransparency='true' frameborder='0'"
+	,"	sandbox='allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts'>"
+	,"</iframe>"
 	,"..."
+	,"<p style='text-align: center'><a href='https://discord.gg/Uh94jFQPtJ'>&copy;2020</a></p>"
 	,"</body>"
 	];
 
@@ -41,10 +46,12 @@ async function my_server(req, res) {
 		ipAddr	= req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
 	if(ips.join().indexOf(theIP) < 0) {
+		if(ips.length >= 10)
+			ips.length = 9;
 		ips.unshift(theIP);
-		cb = callback.bind({res: res, neo: false});
-	} else
 		cb = callback.bind({res: res, neo: true});
+	} else
+		cb = callback.bind({res: res, neo: false});
 	ipapi.location(cb, theIP);       // Complete location for your IP address
 /*	var	requrl	= unescape(req.url.replace(/\+/g, " "));
 	var	szTheme	= "";
