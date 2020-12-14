@@ -87,7 +87,18 @@ async function my_server(req, res) {
 		cb = callback.bind({res: res, neo: true, msg: (msg ? ":" + unescape(msg[1]) : "")});
 	} else
 		cb = callback.bind({res: res, neo: false, msg: ""});
-	ipapi.location(cb, theIP);
+	try {
+		ipapi.location(cb, theIP);
+	} catch(e) {
+		var	tmp = {
+			longitude	:0.0,
+			latitude	:0.0,
+			country		:"RU",
+			city		:"Tembria"
+		};
+		console.log(e);
+		cb(tmp);
+	}
 };
 
 const	server	= http.createServer(my_server);
