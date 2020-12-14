@@ -34,7 +34,7 @@ var callback = function(res) {
 
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
-	ipapi.location(callback, res)       // Complete location for your IP address
+	ipapi.location(console.log, res)       // Complete location for your IP address
 /*	var	requrl	= unescape(req.url.replace(/\+/g, " "));
 	var	szTheme	= "";
 	var	ipAddr	= req.headers["x-forwarded-for"];
