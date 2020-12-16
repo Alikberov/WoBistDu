@@ -177,48 +177,48 @@ async function my_server(req, res) {
 const	http	= requiry("http");
 const	ipapi	= requiry("ipapi.co");
 //const	socket	= requiry("socket.io");
-//const	ws	= requiry("wss");
+const	wsocket	= requiry("websocket");
+const	WebSocketServer	= wsocket && wsocket.server;
 
 const	server	= http.createServer(my_server);
 //const	io	= socket && socket(server);
 
-//const	WSS	= ws && ws.Server;
-//const	wss	= WSS && new WSS({ server: server });
-
-//ws.on("request", my_server);
-
-server && server.on('upgrade', (req, socket, head) => {
-	socket.write('HTTP/1.1 101 Web Socket Protocol Handshake\r\n' +
-		'Upgrade: WebSocket\r\n' +
-		'Connection: Upgrade\r\n' +
-		'\r\n');
-	socket.pipe(socket); // echo back
-});
-
-server.listen(port, host, () => {
-
-	// make a request
-	const options = {
-		port: port,
-		host: host,
-		headers: {
-			'Connection': 'Upgrade',
-			'Upgrade': 'websocket'
-		}
-	};
-
-	const req = http.request(options);
-	req.end();
-
-	req.on('upgrade', (res, socket, upgradeHead) => {
-		console.log('got upgraded!');
-	});
-});
-
-/*server && server.listen(port, host, () => {
+server && server.listen(port, host, () => {
 	log(`Server running at http://${host}:${port}/`);
 	ipapi.location(console.log);
 }) || log(`FAIL: server.listen`);
+
+const	wss	= WebSocketServer && (new WebSocketServer(
+		{
+			httpServer		:server,
+			autoAcceptConnection	:false
+		})
+	);
+
+wss && wss.on('request', function(request) {
+    if (!originIsAllowed(request.origin)) {
+      // Make sure we only accept requests from an allowed origin
+      request.reject();
+      console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
+      return;
+    }
+    
+    var connection = request.accept('echo-protocol', request.origin);
+    console.log((new Date()) + ' Connection accepted.');
+    connection.on('message', function(message) {
+        if (message.type === 'utf8') {
+            console.log('Received Message: ' + message.utf8Data);
+            connection.sendUTF(message.utf8Data);
+        }
+        else if (message.type === 'binary') {
+            console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
+            connection.sendBytes(message.binaryData);
+        }
+    });
+    connection.on('close', function(reasonCode, description) {
+        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+    });
+});
 
 /*wss && wss.on("connection", function connection(tws, req) {
 	var	req_ip	= req.headers["x-forwarded-for"] ? req.headers["x-forwarded-for"].split(",").pop() : req.connection.remoteAddress;
