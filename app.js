@@ -73,7 +73,7 @@ const	html =
 	,"<noscript></noscript>"
 	,"<script>"
 	,'var	hInterval, msg;'
-	,'ws = (new WebSocket(`wss:\/\/${window.location.hostname}:80`)) || null;'
+	,'ws = (new WebSocket(`ws:\/\/${window.location.hostname}:80`)) || null;'
 	,'if(ws) {'
 	,'	ws.onopen = function() {'
 	,'		ws.send("Say Hello!");'
