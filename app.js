@@ -179,16 +179,19 @@ const	ipapi	= requiry("ipapi.co");
 //const	socket	= requiry("socket.io");
 const	ws	= requiry("wss");
 
-const	server	= http.createServer(my_server);
+const	server	= http.createServer();
 //const	io	= socket && socket(server);
+
+const	WSS	= ws && ws.Server;
+const	wss	= WSS && new WSS({ server: server });
+
+ws.onRequest(my_server);
 
 server && server.listen(port, host, () => {
 	log(`Server running at http://${host}:${port}/`);
 	ipapi.location(console.log);
 }) || log(`FAIL: server.listen`);
 
-const	WSS	= ws && ws.Server;
-const	wss	= WSS && new WSS({ server: server });
 wss && wss.on("connection", function connection(tws, req) {
 	var	req_ip	= req.headers["x-forwarded-for"] ? req.headers["x-forwarded-for"].split(",").pop() : req.connection.remoteAddress;
 	log(`User IP is ${req_ip}`);
