@@ -4,10 +4,7 @@
 	"lockfileVersion": 1,
 	"requires"	:true,
 	"dependencies"	: {
-		"http"	:"^15.4.0",
 		"ipapi.co"	:"^0.3.0",
-		"ws"	:"^7.4.0",
-		"wss"	:"^3.3.0"
 	},
 	"description"	:"WoBistDu 2020",
 	"main"		:"app.js",
