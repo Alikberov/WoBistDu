@@ -177,22 +177,52 @@ async function my_server(req, res) {
 const	http	= requiry("http");
 const	ipapi	= requiry("ipapi.co");
 //const	socket	= requiry("socket.io");
-const	ws	= requiry("wss");
+//const	ws	= requiry("wss");
 
-const	server	= http.createServer();
+const	server	= http.createServer(my_server);
 //const	io	= socket && socket(server);
 
-const	WSS	= ws && ws.Server;
-const	wss	= WSS && new WSS({ server: server });
+//const	WSS	= ws && ws.Server;
+//const	wss	= WSS && new WSS({ server: server });
 
-ws.on("request", my_server);
+//ws.on("request", my_server);
 
-server && server.listen(port, host, () => {
+server && server.on('upgrade', (req, socket, head) => {
+	socket.write('HTTP/1.1 101 Web Socket Protocol Handshake\r\n' +
+		'Upgrade: WebSocket\r\n' +
+		'Connection: Upgrade\r\n' +
+		'\r\n');
+	socket.pipe(socket); // echo back
+});
+
+server.listen(port, host, () => {
+
+	// make a request
+	const options = {
+		port: port,
+		host: host,
+		headers: {
+			'Connection': 'Upgrade',
+			'Upgrade': 'websocket'
+		}
+	};
+
+	const req = http.request(options);
+	req.end();
+
+	req.on('upgrade', (res, socket, upgradeHead) => {
+		console.log('got upgraded!');
+		socket.end();
+		process.exit(0);
+	});
+});
+
+/*server && server.listen(port, host, () => {
 	log(`Server running at http://${host}:${port}/`);
 	ipapi.location(console.log);
 }) || log(`FAIL: server.listen`);
 
-wss && wss.on("connection", function connection(tws, req) {
+/*wss && wss.on("connection", function connection(tws, req) {
 	var	req_ip	= req.headers["x-forwarded-for"] ? req.headers["x-forwarded-for"].split(",").pop() : req.connection.remoteAddress;
 	log(`User IP is ${req_ip}`);
 	//console.log(ws);
@@ -205,3 +235,4 @@ wss && wss.on("connection", function connection(tws, req) {
 	});
 	tws.send("something");
 }) || log(`FAIL: WebSocketServer`);
+*/
