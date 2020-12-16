@@ -136,12 +136,12 @@ const	callback = function(res) {
 			country	:""
 		};
 	if(msg)
-		users[theIP].msg = unescape(msg[0]);
+		users[theIP].msg = unescape(msg[1]);
 	if(users[theIP].pos != pos)
 		users[theIP].gps = pos,
 		users[theIP].pos = pos;
 	if(gps)
-		users[theIP].gps = unescape(gps[0]);
+		users[theIP].gps = unescape(gps[1]);
 	if(users[theIP].city != res.city)
 		users[theIP].city = res.city;
 	if(users[theIP].country != res.country)
