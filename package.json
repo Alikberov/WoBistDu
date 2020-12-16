@@ -5,8 +5,8 @@
 	"requires"	:true,
 	"dependencies"	: {
 		"ipapi.co"	:"^0.3.0",
-		"wss"	:"^7.4.0",
-		"ws"	:"^7.4.0"
+		"ws"	:"^7.4.0",
+		"wss"	:"^3.3.0"
 	},
 	"description"	:"WoBistDu 2020",
 	"main"		:"app.js",
