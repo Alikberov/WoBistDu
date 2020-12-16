@@ -110,8 +110,7 @@ const	html =
 	,'	}'
 	,'}'
 	,'hInterval = setInterval(geoFindMe, 10000)'
-</script>
-	,`</script>`
+	,"</script>"
 	,"</body>"
 	];
 
