@@ -13,7 +13,6 @@ var	ePos	= 1;
 var	eTimes	= 0;
 //////////////////////////////////////////////////////////////////////////////
 var	users	= [];
-var	ips	= [];
 //////////////////////////////////////////////////////////////////////////////
 
 log(`Loading different modules...`);
@@ -61,6 +60,13 @@ const	html =
 	,"	padding		:0 0 0 0;"
 	,"	overflow	:auto;"
 	,"}"
+	,"iframe	{"
+	,"	position	:absolute;"
+	,"	left		:0;"
+	,"	top		:0;"
+	,"	width		:1px;"
+	,"	height		:1px;"
+	,"}"
 	,"</style>"
 	,"</head>"
 	,"<body>"
@@ -70,19 +76,11 @@ const	html =
 	,"<table id='Chat'>"
 	,"..."
 	,"</table>"
+	,"<iframe id='Tracker' src='' width='1px' height='1px'></iframe>"
 	,"<noscript></noscript>"
 	,"<script>"
 	,'var	hInterval, msg;'
-	,'ws = (new WebSocket(`ws:\/\/${window.location.hostname}:80`)) || null;'
-	,'if(ws) {'
-	,'	ws.onopen = function() {'
-	,'		ws.send("Say Hello!");'
-	,'	};'
-	,'	ws.onmessage = function(message) {'
-	,'		console.log(`type:${message.type} data:${message.data}`);'
-	,'	}'
-	,'} else'
-	,'	console.log(`Sockets error...`);'
+	,''
 	,'function geoFindMe() {'
 	,'	const status = document.querySelector("#status");'
 	,'	const mapLink = document.querySelector("#map-link");'
@@ -94,6 +92,7 @@ const	html =
 	,'		status.textContent = "";'
 	,'		mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;'
 	,'		mapLink.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;'
+	,'		document.getElementById("Tracker").src = `http://wobistdu.herokuapp.com/gps=${latitude}%2C${longitude}`;'
 	,'		if(ws && (ws.readyState == ws.OPEN)) {'
 	,'			ws.send(`Latitude ${latitude}`);'
 	,'			ws.send(`Longitude ${longitude}`);'
@@ -117,32 +116,63 @@ const	html =
 	];
 
 const	callback = function(res) {
-	if(this.neo) {
-		var	pos = [
-				res.longitude,
-				res.latitude
-			].join();
+	var	chat	= [];
+	var	ipAddr	= this.req.ip || this.req.headers["x-forwarded-for"] || this.req.connection.remoteAddress;
+	if(ipAddr) 
+		ipAddr	= ipAddr.split(",").pop();
+	else
+		ipAddr	= this.req.connection.remoteAddress;
+	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
+	var	msg	= this.req.url.match(/say=([^&?]*)/);
+	var	gps	= this.req.url.match(/gps=([^&?]*)/);
+	var	pos = [
+			res.longitude,
+			res.latitude
+		].join();
+	//
+	if(!(theIP in user))
+		users[theIP] = {
+			gps	:"",
+			msg	:"",
+			pos	:"",
+			city	:"",
+			country	:""
+		};
+	if(msg)
+		users[theIP].msg = unescape(msg[0]);
+	if(users[theIP].pos != pos)
+		users[theIP].gps = pos,
+		users[theIP].pos = pos;
+	if(gps)
+		users[theIP].gps = unescape(gps[0]);
+	if(users[theIP].city != res.city)
+		users[theIP].city = res.city;
+	if(users[theIP].country != res.country)
+		users[theIP].country = res.country;
+	//
+	for(var ip in users) {
+		var	user = users[ip];
 		var	args = [
 				`l=map`,
-				`pt=${pos}`,
+				`pt=${user.gps}`,
 				`z=${16}`
 			].join("&");
-		var	msg = this.msg.replace(/[<>&]+/gm, " ").substr(0, 64);
+		var	msg = user.msg.replace(/[<>&]+/gm, " ").substr(0, 64);
 		var	anchor = [
 				`target='_blank'`,
-				`name='${users.length + 1}'`,
+				`name='${chat.length + 1}'`,
 				`href='${yandex}${args}'`
 			].join(" ");
 		var	image = [
-				`src='${flags}${res.country.toLowerCase()}.svg'`,
+				`src='${flags}${user.country.toLowerCase()}.svg'`,
 				`width='16'`,
 				`height='12'`
 			].join(" ");
-		users.unshift(`<tr><td><a ${anchor}><img ${image} />${res.city}.${res.country}#${users.length + 1}</a></td><td>${msg}</td></tr>`);
+		chat.unshift(`<tr><td><a ${anchor}><img ${image} />${user.city}.${user.country}#${chat.length + 1}</a></td><td>${user.msg}</td></tr>`);
 	}
 	this.res.statusCode = 200;
 	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
-	this.res.end(html.join("\r\n").replace("...", users.join("<br />\r\n")));
+	this.res.end(html.join("\r\n").replace("...", chat.join("<br />\r\n")));
 };
 
 async function my_server(req, res) {
@@ -154,25 +184,17 @@ async function my_server(req, res) {
 	else
 		ipAddr	= req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
-	var	msg	= req.url.match(/say=([^&?]*)/);
-	if(ips.join().indexOf(theIP) < 0) {
-		if(ips.length >= 10)
-			ips.length = 9;
-		ips.unshift(theIP);
-		cb = callback.bind({res: res, neo: true, msg: (msg ? ":" + unescape(msg[1]) : "")});
-	} else
-		cb = callback.bind({res: res, neo: false, msg: ""});
+	cb = callback.bind(
+		{
+			req	:req,
+			res	:res
+		}
+	);
 	try {
 		ipapi.location(cb, theIP);
 	} catch(e) {
-		var	tmp = {
-			longitude	:0.0,
-			latitude	:0.0,
-			country		:"RU",
-			city		:"Tembria"
-		};
 		log(e);
-		cb(tmp);
+		ipapi.location(cb);
 	}
 };
 
