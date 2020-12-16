@@ -183,10 +183,42 @@ const	WebSocketServer	= wsocket && wsocket.server;
 const	server	= http.createServer(my_server);
 //const	io	= socket && socket(server);
 
+server.on('upgrade', (req, socket, head) => {
+  socket.write('HTTP/1.1 101 Web Socket Protocol Handshake\r\n' +
+               'Upgrade: WebSocket\r\n' +
+               'Connection: Upgrade\r\n' +
+               '\r\n');
+
+  socket.pipe(socket); // echo back
+});
+
+server.listen(port, host, () => {
+
+  // make a request
+  const options = {
+    port: port,
+    host: host,
+    headers: {
+      'Connection': 'Upgrade',
+      'Upgrade': 'websocket'
+    }
+  };
+
+  const req = http.request(options);
+  req.end();
+
+  req.on('upgrade', (res, socket, upgradeHead) => {
+    console.log('got upgraded!');
+//    socket.end();
+//    process.exit(0);
+  });
+});
+/*
 server && server.listen(port, host, () => {
 	log(`Server running at http://${host}:${port}/`);
 	ipapi.location(console.log);
 }) || log(`FAIL: server.listen`);
+*/
 
 const	wss	= WebSocketServer && (new WebSocketServer(
 		{
