@@ -47,12 +47,15 @@ const	html =
 	,`<meta content='${timeout}'						http-equiv='refresh'	/>`
 	,"<head><title>WoBistDu?</title>"
 	,"<style>"
-	,"p#pos"
+	,"p#pos		{"
 	,"	position	:absolute;"
 	,"	left		:0;"
-	,"	top		:0;"
+	,"	bottom		:0;"
 	,"}"
 	,"p#copy	{"
+	,"	position	:absolute;"
+	,"	right		:0;"
+	,"	bottom		:0;"
 	,"	text-align	:right;"
 	,"}"
 	,"body	{"
@@ -93,11 +96,6 @@ const	html =
 	,'		mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;'
 	,'		mapLink.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;'
 	,'		document.getElementById("Tracker").src = `http://wobistdu.herokuapp.com/gps=${latitude}%2C${longitude}`;'
-	,'		if(ws && (ws.readyState == ws.OPEN)) {'
-	,'			ws.send(`Latitude ${latitude}`);'
-	,'			ws.send(`Longitude ${longitude}`);'
-	,'			ws.send(`Say ${(new Date()).toLocaleString()}|${msg}`);'
-	,'		}'
 	,'	}'
 	,'	function error() {'
 	,'		status.textContent = "Unable to retrieve your location";'
