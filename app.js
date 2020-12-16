@@ -73,14 +73,15 @@ const	html =
 	,"<noscript></noscript>"
 	,"<script>"
 	,'var	hInterval, msg;'
-	,'ws = new WebSocket(`wss:\/\/${window.location.hostname}:80`);'
-	,'ws.onopen = function() {'
+	,'ws = (new WebSocket(`wss:\/\/${window.location.hostname}:80`)) || null;'
+	,'ws && ws.onopen = function() {'
 	,'	ws.send("Say Hello!");'
 	,'};'
-	,'ws.onmessage = function(message) {'
+	,'ws && ws.onmessage = function(message) {'
 	,'	console.log(`type:${message.type} data:${message.data}`);'
 	,'	'
 	,'}'
+	,'ws || console.log(`Sockets error...`);'
 	,'function geoFindMe() {'
 	,'	const status = document.querySelector("#status");'
 	,'	const mapLink = document.querySelector("#map-link");'
