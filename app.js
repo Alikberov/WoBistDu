@@ -78,7 +78,7 @@ const	html =
 	,'	ws.onopen = function() {'
 	,'		ws.send("Say Hello!");'
 	,'	};'
-	,'	ws && ws.onmessage = function(message) {'
+	,'	ws.onmessage = function(message) {'
 	,'		console.log(`type:${message.type} data:${message.data}`);'
 	,'	}'
 	,'} else'
