@@ -4,7 +4,8 @@
 	"lockfileVersion": 1,
 	"requires"	:true,
 	"dependencies"	: {
-		"ipapi.co"	:"^0.3.0"
+		"ipapi.co"	:"^0.3.0",
+		"websocket"	:"^1.0.0"
 	},
 	"description"	:"WoBistDu 2020",
 	"main"		:"app.js",
