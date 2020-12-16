@@ -230,6 +230,11 @@ const	wss	= WebSocketServer && (new WebSocketServer(
 		})
 	);
 
+function originIsAllowed(origin) {
+  // put logic here to detect whether the specified origin is allowed.
+  return true;
+}
+
 wss && wss.on('request', function(request) {
     if (!originIsAllowed(request.origin)) {
       // Make sure we only accept requests from an allowed origin
