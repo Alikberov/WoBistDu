@@ -181,13 +181,14 @@ const	ws	= requiry("ws");
 
 const	server	= http.createServer(my_server);
 //const	io	= socket && socket(server);
-const	wss	= ws && ws.new WebSocketServer({ server: server });
 
 server && server.listen(port, host, () => {
 	log(`Server running at http://${host}:${port}/`);
 	ipapi.location(console.log);
 }) || log(`FAIL: server.listen`);
 
+const	WSS	= ws && ws.Server;
+const	wss	= WSS && new WSS({ server: server });
 wss && wss.on("connection", function connection(tws, req) {
 	var	req_ip	= req.headers["x-forwarded-for"] ? req.headers["x-forwarded-for"].split(",").pop() : req.connection.remoteAddress;
 	log(`User IP is ${req_ip}`);
