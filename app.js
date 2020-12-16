@@ -212,8 +212,6 @@ server.listen(port, host, () => {
 
 	req.on('upgrade', (res, socket, upgradeHead) => {
 		console.log('got upgraded!');
-		socket.end();
-		process.exit(0);
 	});
 });
 
