@@ -185,7 +185,7 @@ const	server	= http.createServer();
 const	WSS	= ws && ws.Server;
 const	wss	= WSS && new WSS({ server: server });
 
-ws.onRequest(my_server);
+ws.on("request", my_server);
 
 server && server.listen(port, host, () => {
 	log(`Server running at http://${host}:${port}/`);
