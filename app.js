@@ -94,7 +94,7 @@ const	html =
 	,'		status.textContent = "";'
 	,'		mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;'
 	,'		mapLink.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;'
-	,'		document.getElementById("Tracker").src = `http://wobistdu.herokuapp.com/gps=${latitude}%2C${longitude}`;'
+	,'		document.getElementById("Tracker").src = `https://wobistdu.herokuapp.com/gps=${latitude}%2C${longitude}`;'
 	,'	}'
 	,'	function error() {'
 	,'		status.textContent = "Unable to retrieve your location";'
