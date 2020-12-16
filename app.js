@@ -200,7 +200,8 @@ server.listen(port, host, () => {
     host: host,
     headers: {
       'Connection': 'Upgrade',
-      'Upgrade': 'websocket'
+      'Upgrade': 'websocket',
+      "Sec-WebSocket-Accept": "ZjY5ODliNTViYzJlOTNkMjk4OTg3Y2U2NjQ3MTBlZjZiNzliYzk4Yg=="
     }
   };
 
