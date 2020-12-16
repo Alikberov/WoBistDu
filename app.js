@@ -130,7 +130,7 @@ const	callback = function(res) {
 			res.latitude
 		].join();
 	//
-	if(!(theIP in user))
+	if(!(theIP in users))
 		users[theIP] = {
 			gps	:"",
 			msg	:"",
