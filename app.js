@@ -1,4 +1,20 @@
-const	log	= console.log;
+var	logs	= [];
+var	logst	= null;
+const	log	= function(...args) {
+	logs.push(args);
+	if(logst)
+		clearTimeout(logst);
+	logst = setTimeout(
+		function() {
+			logs.forEach(
+				function(args) {
+					var	l = console.log;
+					l(...args);
+				}
+			);
+			logs = [];
+		}, 1000);
+	};
 //////////////////////////////////////////////////////////////////////////////
 const	host	= process.env.PORT ? "" : "127.0.0.1";
 const	port	= process.env.PORT || 80;
@@ -8,110 +24,16 @@ const	yandex	= "https://yandex.ru/maps/?";
 const	discord	= "https://discord.gg/Uh94jFQPtJ";
 const	timeout	= "300";
 //////////////////////////////////////////////////////////////////////////////
+const	file_cs	= "index.css";				// Cascade Styles
+const	file_ht	= "index.html";				// Hyper Text
+const	file_js	= "index.js";				// Java Script
+//////////////////////////////////////////////////////////////////////////////
 var	eBits	= 0;
 var	ePos	= 1;
 var	eTimes	= 0;
 //////////////////////////////////////////////////////////////////////////////
 var	users	= [];
 //////////////////////////////////////////////////////////////////////////////
-
-log(`Loading different modules...`);
-
-function requiry(name) {
-	try {
-		var	imports	= require(name);
-		log(`module "${name}" is loaded...`);
-		ePos	<<= 1;
-		return	imports;
-	} catch(e) {
-		var	error	= `module "${name}" not found!!!`;
-		log(error);
-		eBits	|= ePos;
-		ePos	<<= 1;
-		eTimes	++;
-		return	false;
-	}
-}
-//////////////////////////////////////////////////////////////////////////////
-
-const	html =
-	["<!doctype html>"
-	,"<html itemscope='' itemtype='http://schema.org/SearchResultsPage' lang='ru'		  >"
-	,"<head											  >"
-	,"<meta content='text/html; charset=utf8'			http-equiv='Content-Type'	 />"
-	,"<meta content='ru-RU'					http-equiv='Content-Language'	 />"
-	,"<meta content='geolocation'						name='keywords'	 />"
-	,"<meta content='Static'							name='googlebot' />"
-	,"<meta content='NoIndex,NoArchive'					name='Robots'	 />"
-	,"<meta content='https://github.com/Alikberov'				name='Author'	 />"
-	,`<meta content='${timeout}'						http-equiv='refresh'	/>`
-	,"<head><title>WoBistDu?</title>"
-	,"<style>"
-	,"p#pos		{"
-	,"	position	:absolute;"
-	,"	left		:0;"
-	,"	bottom		:0;"
-	,"}"
-	,"p#copy	{"
-	,"	position	:absolute;"
-	,"	right		:0;"
-	,"	bottom		:0;"
-	,"	text-align	:right;"
-	,"}"
-	,"body	{"
-	,"	background-color:silver;"
-	,"	padding		:0 0 0 0;"
-	,"	overflow	:auto;"
-	,"}"
-	,"iframe	{"
-	,"	position	:absolute;"
-	,"	left		:0;"
-	,"	top		:0;"
-	,"	width		:1px;"
-	,"	height		:1px;"
-	,"}"
-	,"</style>"
-	,"</head>"
-	,"<body>"
-	,"<table id='Chat'>"
-	,"..."
-	,"</table>"
-	,"<p id='pos'><a id='map-link' target='_blank'>...</a><span id='status'>...</span></p>"
-	,"<p id='copy'><a target='_blank' href='${discord}'>&copy;2020</a></p>"
-	,"<iframe id='Tracker' src='' width='1px' height='1px'></iframe>"
-	,"<noscript></noscript>"
-	,"<script>"
-	,'var	hInterval, msg;'
-	,''
-	,'function geoFindMe() {'
-	,'	const status = document.querySelector("#status");'
-	,'	const mapLink = document.querySelector("#map-link");'
-	,'	mapLink.href = "";'
-	,'	mapLink.textContent = "";'
-	,'	function success(position) {'
-	,'		const latitude  = position.coords.latitude;'
-	,'		const longitude = position.coords.longitude;'
-	,'		status.textContent = "";'
-	,'		mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;'
-	,'		mapLink.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;'
-	,'		document.getElementById("Tracker").src = `https://wobistdu.herokuapp.com/gps=${longitude}%2C${latitude}`;'
-	,'	}'
-	,'	function error() {'
-	,'		status.textContent = "Unable to retrieve your location";'
-	,'		clearInterval(hInterval)'
-	,'	}'
-	,'	if(!navigator.geolocation) {'
-	,'		status.textContent = "Geolocation is not supported by your browser";'
-	,'	} else {'
-	,'		status.textContent = "Locating…";'
-	,'		navigator.geolocation.getCurrentPosition(success, error);'
-	,'	}'
-	,'}'
-	,'hInterval = setInterval(geoFindMe, 10000)'
-	,"</script>"
-	,"</body>"
-	];
-
 const	callback = function(res) {
 	var	chat	= [];
 	var	ipAddr	= this.req.ip || this.req.headers["x-forwarded-for"] || this.req.connection.remoteAddress;
@@ -120,8 +42,9 @@ const	callback = function(res) {
 	else
 		ipAddr	= this.req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
-	var	msg	= this.req.url.match(/say=([^&?]*)/);
-	var	gps	= this.req.url.match(/gps=([^&?]*)/);
+	var	msg	= this.req.url.match(/([^\/][^&?]*)/);
+	var	gps	= unescape(this.req.url).match(/(\d+(?:\.\d+)?),(\d+(?:\.\d+)?)/);
+//	var	gps	= this.req.url.match(/gps=([^&?]*)/);
 	var	pos = [
 			res.longitude,
 			res.latitude
@@ -135,13 +58,16 @@ const	callback = function(res) {
 			city	:"",
 			country	:""
 		};
-	if(msg)
+	if(msg && (!gps || (unescape(msg[1]) != gps[0]))) {
 		users[theIP].msg = unescape(msg[1]);
+	}
 	if(users[theIP].pos != pos)
 		users[theIP].gps = pos,
 		users[theIP].pos = pos;
-	if(gps)
-		users[theIP].gps = unescape(gps[1]);
+	if(gps) {
+		log('gps'+gps[1] +  '/'+gps[2] + '-' + gps);
+		users[theIP].gps = ([gps[1], gps[2]].join());
+	}
 	if(users[theIP].city != res.city)
 		users[theIP].city = res.city;
 	if(users[theIP].country != res.country)
@@ -161,7 +87,7 @@ const	callback = function(res) {
 				`href='${yandex}${args}'`
 			].join(" ");
 		var	image = [
-				`src='${flags}${user.country.toLowerCase()}.svg'`,
+				`src='${flags}${(user.country || "RU").toLowerCase()}.svg'`,
 				`width='16'`,
 				`height='12'`
 			].join(" ");
@@ -169,8 +95,88 @@ const	callback = function(res) {
 	}
 	this.res.statusCode = 200;
 	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
-	this.res.end(html.join("\r\n").replace("...", chat.join("<br />\r\n")));
+	this.res.end(this.content.replace("{CHAT}", chat.join("<br />\r\n")));
 };
+//////////////////////////////////////////////////////////////////////////////
+var	files	= {
+		"/css"	:{				// Cascade Styles
+			name	:"index.css",
+			content	:"",
+			type	:"text/css; charset=utf-8",
+			code	:null
+		},
+		"/js"	:{
+			name	:"index.js",		// Java Script
+			content	:"",
+			type	:"application/x-javascript; charset=utf-8",
+			code	:null
+		},
+		"/ico"	:{
+			name	:"index.png",		// Favorite Icon
+			content	:"",
+			type	:"image/png",
+			code	:"Base64"
+		},
+		"/"	:{				// Hyper Text
+			name	:"index.html",
+			content	:"",
+			type	:"text/html; charset=utf-8",
+			code	:callback,
+			specs	:{
+				discord	:discord,
+				timeout	:timeout
+			}
+		}
+		,oi:{name:"iyu", content:""}
+	};
+var	file_rq	= [];
+//////////////////////////////////////////////////////////////////////////////
+function requiry(name) {
+	try {
+		var	imports	= require(name);
+		log(`module "${name}" is loaded...`);
+		ePos	<<= 1;
+		return	imports;
+	} catch(e) {
+		var	error	= `module "${name}" not found!!!`;
+		log(error);
+		eBits	|= ePos;
+		ePos	<<= 1;
+		eTimes	++;
+		return	false;
+	}
+}
+//////////////////////////////////////////////////////////////////////////////
+log(`Loading different modules and files...`);
+//////////////////////////////////////////////////////////////////////////////
+const	fs	= requiry("fs");
+const	path	= requiry("path");
+//////////////////////////////////////////////////////////////////////////////
+for(id in files) {
+	var	p = path.join(__dirname, files[id].name);
+	var	rc = read_content.bind({path: id, file: files[id]});
+	//
+	function read_content(err, data){
+		if(err)
+			log(`${err}`);
+		else {
+			log(`file ${this.path}:"${this.file.name}" - ${data.length} bytes`);
+			var	specs = this.file.specs;
+			if(specs)
+				for(var opt in specs)
+					data = data.replace(new RegExp(`\\$\\{${opt}\\}`, "gm"), specs[opt]);
+			this.file.content = data;
+		}
+	}
+	//
+	if(typeof files[id].code == "string")
+		fs.readFile(p, rc);
+	else
+		fs.readFile(p, {encoding: "utf-8"}, rc);
+	file_rq.push(`(${id.replace(/(\/|\\|\.)/g, "\\$1")})`);
+}
+log(`Matches: ${file_rq.join("|")}`);
+file_rq = new RegExp(`(${file_rq.join("|")})`);
 
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
@@ -181,17 +187,39 @@ async function my_server(req, res) {
 	else
 		ipAddr	= req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
-	cb = callback.bind(
-		{
-			req	:req,
-			res	:res
+	var	theFile	= req.url.match(file_rq);
+	//
+	log(req.url);
+	var	file	= files[theFile[1]];
+	//
+	if(!theFile && !file)
+		file = files["/"];
+	//
+	if(typeof file.code == "function") {
+		//
+		res.statusCode = 200;
+		res.setHeader("Content-Type", `${file.type}`);
+		cb = file.code.bind(
+			{
+				req	:req,
+				res	:res,
+				content	:file.content
+			}
+		);
+		try {
+			ipapi.location(cb, theIP);
+		} catch(e) {
+			log(e);
+			ipapi.location(cb);
 		}
-	);
-	try {
-		ipapi.location(cb, theIP);
-	} catch(e) {
-		log(e);
-		ipapi.location(cb);
+	} else
+	if(file.code) {
+		res.writeHead(200, {'Content-Type': 'image/png'});
+		res.end(file.content, file.code);
+	} else {
+		res.statusCode = 200;
+		res.setHeader("Content-Type", `${file.type}`);
+		res.end(file.content);
 	}
 };
 
