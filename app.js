@@ -223,7 +223,7 @@ async function my_server(req, res) {
 	}
 };
 
-const	http	= requiry("http");
+const	http	= requiry("https");
 const	ipapi	= requiry("ipapi.co");
 //const	socket	= requiry("socket.io");
 const	wsocket	= requiry("websocket");
