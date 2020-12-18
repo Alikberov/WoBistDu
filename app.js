@@ -223,22 +223,12 @@ async function my_server(req, res) {
 	}
 };
 
-const options = {
-	strictSSL: false,
-	requestCert: true,
-    rejectUnauthorized: false,
-  key: fs.readFileSync(path.join(__dirname, 'key.pem'), "utf8"),
-  cert: fs.readFileSync(path.join(__dirname, 'cert.pem'), "utf8")
-};
-
 const	http	= requiry("https");
 const	ipapi	= requiry("ipapi.co");
-//const	socket	= requiry("socket.io");
 const	wsocket	= requiry("websocket");
 const	WebSocketServer	= wsocket && wsocket.server;
 
 const	server	= http.createServer({}, my_server);
-//const	io	= socket && socket(server);
 
 server.on('upgrade', (req, socket, head) => {
   socket.write('HTTP/1.1 101 Web Socket Protocol Han */dshake\r\n' +
@@ -250,24 +240,5 @@ server.on('upgrade', (req, socket, head) => {
 });
 
 server.listen(port, host, () => {
-
-  // make a request
-/*  const options = {
-    port: port,
-    host: host,
-    headers: {
-      'Connection': 'Upgrade',
-      'Upgrade': 'websocket',
-      "Sec-WebSocket-Accept": "ZjY5ODliNTViYzJlOTNkMjk4OTg3Y2U2NjQ3MTBlZjZiNzliYzk4Yg=="
-    }
-  };
-
-  const req = http.request(options);
-  req.end();
-
-  req.on('upgrade', (res, socket, upgradeHead) => {
-    console.log('got upgraded!');
-//    socket.end();
-//    process.exit(0);
-  });*/
+	log(`Listen ${host}:${port}`);
 });
