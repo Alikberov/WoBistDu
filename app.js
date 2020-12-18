@@ -226,12 +226,12 @@ async function my_server(req, res) {
 const	http	= requiry("https");
 const	ipapi	= requiry("ipapi.co");
 //const	socket	= requiry("socket.io");
-const	wsocket	= requiry("websocket");
-const	WebSocketServer	= wsocket && wsocket.server;
+//const	wsocket	= requiry("websocket");
+//const	WebSocketServer	= wsocket && wsocket.server;
 
 const	server	= http.createServer(my_server);
 //const	io	= socket && socket(server);
-
+/*
 server.on('upgrade', (req, socket, head) => {
   socket.write('HTTP/1.1 101 Web Socket Protocol Handshake\r\n' +
                'Upgrade: WebSocket\r\n' +
@@ -240,7 +240,7 @@ server.on('upgrade', (req, socket, head) => {
 
   socket.pipe(socket); // echo back
 });
-
+*/
 server.listen(port, host, () => {
 
   // make a request
