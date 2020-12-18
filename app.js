@@ -223,28 +223,36 @@ async function my_server(req, res) {
 	}
 };
 
-const	http	= requiry("http");
+const options = {
+	strictSSL: false,
+	requestCert: true,
+    rejectUnauthorized: false,
+  key: fs.readFileSync(path.join(__dirname, 'key.pem'), "utf8"),
+  cert: fs.readFileSync(path.join(__dirname, 'cert.pem'), "utf8")
+};
+
+const	http	= requiry("https");
 const	ipapi	= requiry("ipapi.co");
 //const	socket	= requiry("socket.io");
-//const	wsocket	= requiry("websocket");
-//const	WebSocketServer	= wsocket && wsocket.server;
+const	wsocket	= requiry("websocket");
+const	WebSocketServer	= wsocket && wsocket.server;
 
-const	server	= http.createServer(my_server);
+const	server	= http.createServer({}, my_server);
 //const	io	= socket && socket(server);
-/*
+
 server.on('upgrade', (req, socket, head) => {
-  socket.write('HTTP/1.1 101 Web Socket Protocol Handshake\r\n' +
+  socket.write('HTTP/1.1 101 Web Socket Protocol Han */dshake\r\n' +
                'Upgrade: WebSocket\r\n' +
                'Connection: Upgrade\r\n' +
                '\r\n');
 
   socket.pipe(socket); // echo back
 });
-*/
+
 server.listen(port, host, () => {
 
   // make a request
-  const options = {
+/*  const options = {
     port: port,
     host: host,
     headers: {
@@ -261,63 +269,5 @@ server.listen(port, host, () => {
     console.log('got upgraded!');
 //    socket.end();
 //    process.exit(0);
-  });
+  });*/
 });
-/*
-server && server.listen(port, host, () => {
-	log(`Server running at http://${host}:${port}/`);
-	ipapi.location(console.log);
-}) || log(`FAIL: server.listen`);
-*/
-
-const	wss	= WebSocketServer && (new WebSocketServer(
-		{
-			httpServer		:server,
-			autoAcceptConnection	:false
-		})
-	);
-
-function originIsAllowed(origin) {
-  // put logic here to detect whether the specified origin is allowed.
-  return true;
-}
-
-wss && wss.on('request', function(request) {
-    if (!originIsAllowed(request.origin)) {
-      // Make sure we only accept requests from an allowed origin
-      request.reject();
-      console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
-      return;
-    }
-    
-    var connection = request.accept('echo-protocol', request.origin);
-    console.log((new Date()) + ' Connection accepted.');
-    connection.on('message', function(message) {
-        if (message.type === 'utf8') {
-            console.log('Received Message: ' + message.utf8Data);
-            connection.sendUTF(message.utf8Data);
-        }
-        else if (message.type === 'binary') {
-            console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
-            connection.sendBytes(message.binaryData);
-        }
-    });
-    connection.on('close', function(reasonCode, description) {
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-    });
-});
-
-/*wss && wss.on("connection", function connection(tws, req) {
-	var	req_ip	= req.headers["x-forwarded-for"] ? req.headers["x-forwarded-for"].split(",").pop() : req.connection.remoteAddress;
-	log(`User IP is ${req_ip}`);
-	//console.log(ws);
-//  var location = url.parse(ws.upgradeReq.url, true);
-  // you might use location.query.access_token to authenticate or share sessions
-  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
- 
-	tws.on("message", function incoming(message) {
-		log("received: %s", message);
-	});
-	tws.send("something");
-}) || log(`FAIL: WebSocketServer`);
-*/
