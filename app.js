@@ -58,6 +58,7 @@ const	callback = function(res) {
 			city	:"",
 			country	:""
 		};
+	log(msg);
 	if(msg && (!gps || (unescape(msg[2]) != gps[0]))) {
 		users[theIP].msg = unescape(msg[2]).replace(/^\/\?[^=]+=/, "").replace(/\+/g, " ");
 	}
