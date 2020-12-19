@@ -189,7 +189,7 @@ async function my_server(req, res) {
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
 	var	theFile	= req.url.match(file_rq);
 	//
-	log(req.url);
+	log(req);
 	var	file	= files[theFile[1]];
 	//
 	if(!theFile && !file)
@@ -242,22 +242,3 @@ server.on('upgrade', (req, socket, head) => {
 server.listen(port, host, () => {
 	log(`Listen ${host}:${port}`);
 });
-
-
-    server.use('/api', function (req, res) {
-        console.log('Request was made to: ' + req.originalUrl);
-    });
-    server.use('/home', function (req, res) {
-        console.log('Request was made to: ' + req.originalUrl);
-    });
-    server.use('/error', function (req, res) {
-        console.log('Request was made to: ' + req.originalUrl);
-    });
-    
-    server.get('*', function (req, res, next) {
-        console.log('Request was made to: ' + req.originalUrl);
-        return next();
-    });
-    server.get('/', function (req, res) {
-        log('redirect /');
-    });
