@@ -22,4 +22,8 @@
 <p id='copy'><a target='_blank' href='${discord}'>&copy;2020</a></p>
 <iframe id='Tracker' src='' width='1px' height='1px'></iframe>
 <noscript></noscript>
+<script>
+if(window.location.href.substr(0, 5) == "http:")
+	window.location.href = "https://" + window.location.href.substr(8).replace(/\/.*/, "/");
+</script>
 </body>
