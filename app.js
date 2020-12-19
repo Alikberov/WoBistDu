@@ -178,7 +178,172 @@ for(id in files) {
 }
 log(`Matches: ${file_rq.join("|")}`);
 file_rq = new RegExp(`(${file_rq.join("|")})`);
+////////////////////////////////////////////////////////////////
+const	firebase			= require("firebase");
 
+// Initialize Firebase
+var config = {
+	apiKey			:"AIzaSyAwCLigT_bKFepWjj9cSfFxKB3ZO_XVEUs",
+	authDomain		:"wo-bist-du-7.firebaseapp.com",
+	databaseURL		:"https://wo-bist-du-7-default-rtdb.firebaseio.com",
+	projectId		:"wo-bist-du-7",
+	storageBucket		:"wo-bist-du-7.appspot.com",
+	messagingSenderId	:"1023209527071",
+	appId			:"1:1023209527071:web:794a9981528d323eb3c22a",
+	measurementId		:"G-MR35KXSLKZ"
+);
+//
+var	app = firebase.initializeApp(config);
+//
+var	db = firebase.firestore();
+// Disable deprecated features
+db.settings({
+  timestampsInSnapshots: true
+});
+
+db.collection("users").get().then((querySnapshot) => {
+	log(`firestore::users`);
+    querySnapshot.forEach((doc) => {
+	    log(`firestore::users::`);
+        console.log(`${doc.id} => ${util.inspect(doc.data(), false, null, true)}`);
+    });
+});
+//
+var ref = firebase.app().database().ref("/");
+var users = ref;//.child("/");
+//
+users.once("value")
+.then(
+	function(snap) {
+		log(`firebase.once::`);
+		var	s = snap.val();
+		//console.log('snap.val()', s);
+		//log(util.inspect(s, {showHidden:false,depth:7,compact:false}, 7, true));
+	}
+);
+users.on("value",
+	function(snap) {
+		log(`firebase.on::`);
+		var	s = snap.val();
+		//console.log('snap.val()', s);
+		//log(util.inspect(s, {showHidden:false,depth:7,compact:false}, 7, true));
+	}
+);
+var hHotRef = firebase.app().database().ref("/");
+
+var	Config	=
+{
+	js	:"",
+	css	:"",
+	html	:"",
+	chat	:"",
+	state	:"",
+	images	:
+	{
+		blank	:undefined
+	},
+	users	:
+	{
+		Alikberov:
+		{
+			scores	:""
+		}
+	}
+};
+function HotConfig_Image(image, err) {
+	var	info	= `DataBase::«${this.path}${this.branch}» is `;
+	if(image != null) {
+		info += `Image(${image.width}x${image.height}) - `;
+		try {
+			hCtx.drawImage(image, 0, 0, 99, 99, 0, 0, 99, 99);
+			this.config[this.branch] = image;
+			info += `ready`
+		} catch(e) {
+			info += `${e}`;
+		}
+	} else
+		info += `${err}`;
+	log(`${info}…`);
+}
+
+function HotConfig_Set(snap) {
+	const	max = 24;
+	var	s = snap.val();
+	var	old = this.config[this.branch];
+	var	info	= `DataBase::«${this.path}${this.branch}» is `;
+	info += `changed from `;
+	if("image" == typeof old)
+		info += `changed from Image(${old.width}x${old.height})`
+	else
+	if("string" == typeof old)
+		info += `changed from "${old.substr(0,max)}${old.length > max ? "…" : ""}"`;
+	else
+	if("number" == typeof old)
+		info += `changed from (${old})`;
+	else
+	if(null == old && s == null)
+		info += `steel «${old}»`;
+	else
+		info += `«${old}»`;
+	if("string" == typeof s) {
+		if(!s.indexOf("data:image/")) {
+			info += ` to Image${s.split(",")[0].substr(10)}`;
+			loadImage(s).then(
+				HotConfig_Image
+				.bind(
+					{
+						config	:this.config,
+						branch	:this.branch,
+						path	:this.path
+					}
+				)
+			);
+		} else {
+			info += ` to "${s.substr(0,max)}${old.length > max ? "…" : ""}"`;
+			this.config[this.branch] = s;
+		}
+	} else
+	if("number" == typeof s) {
+		info += ` to (${s})`;
+		this.config[this.branch] = s;
+	} else
+	if(null != old)
+		info += ` to ${typeof s} - ${s}`;
+	log(`${info}…`);
+}
+function HotConfig_Init(map, callback, ref, path) {
+	for(var id in map) {
+		if("object" != typeof map[id]) {
+			log(`${path}${id} binding…`);
+			ref.child(id)
+			.on("value",
+				callback
+				.bind(
+					{
+						config	:map,
+						branch	:id,
+						path	:path
+					}
+				)
+			);
+		} else {
+			HotConfig_Init(map[id], callback, ref.child(id), path + id + "/");
+		}
+	}
+}
+HotConfig_Init(Config, HotConfig_Set, hHotRef, "/");
+log(`Define the HTML-Parser...`);
+var	handler = new htmlparser.DefaultHandler(function(error, dom) {
+	if(error) {
+		log("Parse error...");
+		log(error);
+	} else {
+		log("Parsed - " + dom.length);
+		log(`${dom}`);
+		//console.log(util.inspect(dom, false, null, true /* enable colors */));
+	}
+});
+////////////////////////////////////////////////////////////////
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
 	var	cb;
