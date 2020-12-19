@@ -42,7 +42,7 @@ const	callback = function(res) {
 	else
 		ipAddr	= this.req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
-	var	msg	= (this.req.path || "").match(/\/\?_=([^#&]+)/);
+	var	msg	= (this.req.url).match(/\/\?_=([^#&]+)/);
 	var	gps	= unescape(this.req.url).match(/(\d+(?:\.\d+)?),(\d+(?:\.\d+)?)/);
 //	var	gps	= this.req.url.match(/gps=([^&?]*)/);
 	var	pos = [
@@ -58,7 +58,7 @@ const	callback = function(res) {
 			city	:"",
 			country	:""
 		};
-	log(`${this.req.path} ${msg}`);
+	log(`${this.req.url} ${msg}`);
 	if(msg && (!gps || (unescape(msg[1]) != gps[0]))) {
 		users[theIP].msg = unescape(msg[1]).replace(/\+/g, " ");
 	}
