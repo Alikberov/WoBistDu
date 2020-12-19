@@ -42,7 +42,7 @@ const	callback = function(res) {
 	else
 		ipAddr	= this.req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
-	var	msg	= (this.req.path || "").match(/(^\/(?:\?say=)?)([^\/][^&?]+)/);
+	var	msg	= (this.req.path || "")..match(/^\/([^\/][^&?]*)/)
 	var	gps	= unescape(this.req.url).match(/(\d+(?:\.\d+)?),(\d+(?:\.\d+)?)/);
 //	var	gps	= this.req.url.match(/gps=([^&?]*)/);
 	var	pos = [
@@ -59,7 +59,7 @@ const	callback = function(res) {
 			country	:""
 		};
 	if(msg && (!gps || (unescape(msg[2]) != gps[0]))) {
-		users[theIP].msg = unescape(msg[2]).replace(/\+/g, " ");
+		users[theIP].msg = unescape(msg[2]).replace(/^\/\?[^=]+=/, "").replace(/\+/g, " ");
 	}
 	if(users[theIP].pos != pos)
 		users[theIP].gps = pos,
@@ -189,7 +189,7 @@ async function my_server(req, res) {
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
 	var	theFile	= req.url.match(file_rq);
 	//
-	log(req);
+	//log(req);
 	var	file	= files[theFile[1]];
 	//
 	if(!theFile && !file)
