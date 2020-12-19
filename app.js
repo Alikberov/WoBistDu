@@ -242,3 +242,22 @@ server.on('upgrade', (req, socket, head) => {
 server.listen(port, host, () => {
 	log(`Listen ${host}:${port}`);
 });
+
+    server.get('/', function (req, res) {
+        log('redirect /');
+    });
+
+    server.use('/api', function (req, res) {
+        console.log('Request was made to: ' + req.originalUrl);
+    });
+    server.use('/home', function (req, res) {
+        console.log('Request was made to: ' + req.originalUrl);
+    });
+    server.use('/error', function (req, res) {
+        console.log('Request was made to: ' + req.originalUrl);
+    });
+    
+    server.get('*', function (req, res, next) {
+        console.log('Request was made to: ' + req.originalUrl);
+        return next();
+    });
