@@ -335,6 +335,8 @@ async function my_server(req, res) {
 	//
 	//log(req);
 	var	file	= files[theFile[1]];
+	var	fileId	= theFile[1].substr(1);
+	var	cfgId	= fileId == "" ? "html" : fileId;
 	var	cloud	= "";
 	//
 	// log(Config);
@@ -348,9 +350,9 @@ async function my_server(req, res) {
 			cloud = file.content;
 		}
 	} else {
-		log(`Config.${theFile[1].substr(1)}`);
-		if((theFile[1].substr(1) in Config) && (Config[theFile[1].substr(1)] != "")) {
-			cloud = Config[theFile[1].substr(1)];
+		log(`Config.${cfgId}`);
+		if((cfgId in Config) && (Config[cfgId] != "")) {
+			cloud = Config[cfgId];
 		} else {
 			log(`file.content`);
 			cloud = file.content;
