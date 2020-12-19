@@ -332,17 +332,7 @@ function HotConfig_Init(map, callback, ref, path) {
 	}
 }
 HotConfig_Init(Config, HotConfig_Set, hHotRef, "/");
-log(`Define the HTML-Parser...`);
-var	handler = new htmlparser.DefaultHandler(function(error, dom) {
-	if(error) {
-		log("Parse error...");
-		log(error);
-	} else {
-		log("Parsed - " + dom.length);
-		log(`${dom}`);
-		//console.log(util.inspect(dom, false, null, true /* enable colors */));
-	}
-});
+
 ////////////////////////////////////////////////////////////////
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
@@ -357,9 +347,20 @@ async function my_server(req, res) {
 	//
 	//log(req);
 	var	file	= files[theFile[1]];
+	var	cloud	= "";
 	//
-	if(!theFile && !file)
+	if(!theFile && !file) {
 		file = files["/"];
+		if(Config.html != "")
+			cloud = Config.html;
+		else
+			cloud = file.content;
+	} else {
+		if((theFile[1] in Config) && (Config[theFile[1]] != ""))
+			cloud = Config[theFile[1]];
+		else
+			cloud = file.content;
+	}
 	//
 	if(typeof file.code == "function") {
 		//
@@ -369,7 +370,7 @@ async function my_server(req, res) {
 			{
 				req	:req,
 				res	:res,
-				content	:file.content
+				content	:cloud
 			}
 		);
 		try {
