@@ -58,8 +58,8 @@ const	callback = function(res) {
 			city	:"",
 			country	:""
 		};
-	log(msg);
-	if(msg && (!gps || (unescape(msg[2]) != gps[0]))) {
+	log(`${this.req.path} ${msg}`);
+	if(msg && (!gps || (unescape(msg[1]) != gps[0]))) {
 		users[theIP].msg = unescape(msg[1]).replace(/\+/g, " ");
 	}
 	if(users[theIP].pos != pos)
