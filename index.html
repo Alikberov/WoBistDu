@@ -17,23 +17,21 @@
 <title>WoBistDu?</title>
 <noscript></noscript>
 <script>
-if(window.location.protocol == "http:"
-|| window.location.pathname != "/"
-|| window.location.search.length > 1)
-	window.location.href = "https:" + "//" + window.location.hostname;
+
 </script>
 <script src="js"></script>
 </head>
-<body>
+<body onload='init()'>
 <table id='Chat'>
 {CHAT}
 </table>
 <p id='pos'><a id='map-link' target='_blank'>...</a><span id='status'>...</span></p>
 <hr />
-<iframe
-	width='560'
-	height='315'
+<iframe	id='Videos'
+	width='640'
+	height='360'
 	src='https://www.youtube.com/embed/ERCybZO3BTk'
+	data-src1='-9zgDJVj3SA'
 	frameborder='0'
 	allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
 	allowfullscreen>
