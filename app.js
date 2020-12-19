@@ -223,12 +223,12 @@ async function my_server(req, res) {
 	}
 };
 
-const	http	= requiry("https");
+const	http	= requiry("http");
 const	ipapi	= requiry("ipapi.co");
 const	wsocket	= requiry("websocket");
 const	WebSocketServer	= wsocket && wsocket.server;
 
-const	server	= http.createServer({}, my_server);
+const	server	= http.createServer(my_server);
 
 server.on('upgrade', (req, socket, head) => {
   socket.write('HTTP/1.1 101 Web Socket Protocol Han */dshake\r\n' +
