@@ -191,7 +191,7 @@ var config = {
 	messagingSenderId	:"1023209527071",
 	appId			:"1:1023209527071:web:794a9981528d323eb3c22a",
 	measurementId		:"G-MR35KXSLKZ"
-);
+};
 //
 var	app = firebase.initializeApp(config);
 //
