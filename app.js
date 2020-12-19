@@ -81,7 +81,8 @@ const	callback = function(res) {
 				`pt=${user.gps}`,
 				`z=${16}`
 			].join("&");
-		var	msg = user.msg.replace(/[<>&]+/gm, " ").substr(0, 64);
+		var	msg = user.msg || "???";
+			msg = msg.replace(/[<>&]+/gm, " ").substr(0, 64);
 		var	anchor = [
 				`target='_blank'`,
 				`name='${chat.length + 1}'`,
