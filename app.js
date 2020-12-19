@@ -196,7 +196,7 @@ var config = {
 //
 var	app = firebase.initializeApp(config);
 //
-var	db = firebase.firestore();
+/*var	db = firebase.firestore();
 // Disable deprecated features
 db.settings({
   timestampsInSnapshots: true
@@ -229,7 +229,7 @@ users.on("value",
 		//console.log('snap.val()', s);
 		//log(util.inspect(s, {showHidden:false,depth:7,compact:false}, 7, true));
 	}
-);
+);*/
 var hHotRef = firebase.app().database().ref("/");
 
 var	Config	=
