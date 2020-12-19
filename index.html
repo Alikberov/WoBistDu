@@ -16,7 +16,7 @@
 <script>
 if(window.location.protocol == "http:"
 || window.location.pathname != "/"
-|| window.location.search != "?")
+|| window.location.search.length > 1)
 	window.location.href = "https:" + "//" + window.location.hostname;
 </script>
 <script src="js"></script>
