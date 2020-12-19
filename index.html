@@ -12,6 +12,13 @@
 <link rel='shortcut icon' href='ico' type='image/x-icon'>
 <link rel='stylesheet' href='css'>
 <title>WoBistDu?</title>
+<noscript></noscript>
+<script>
+if(window.location.protocol == "http:"
+|| window.location.pathname != "/"
+|| window.location.search != "?")
+	window.location.href = "https:" + "//" + window.location.hostname;
+</script>
 <script src="js"></script>
 </head>
 <body>
@@ -21,9 +28,4 @@
 <p id='pos'><a id='map-link' target='_blank'>...</a><span id='status'>...</span></p>
 <p id='copy'><a target='_blank' href='${discord}'>&copy;2020</a></p>
 <iframe id='Tracker' src='' width='1px' height='1px'></iframe>
-<noscript></noscript>
-<script>
-if(window.location.href.substr(0, 5) == "http:")
-	window.location.href = "https://" + window.location.href.substr(7).replace(/\/.*/, "/");
-</script>
 </body>
