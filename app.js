@@ -235,20 +235,7 @@ var	Config	=
 {
 	js	:"",
 	css	:"",
-	html	:"",
-	chat	:"",
-	state	:"",
-	images	:
-	{
-		blank	:undefined
-	},
-	users	:
-	{
-		Alikberov:
-		{
-			scores	:""
-		}
-	}
+	html	:""
 };
 function HotConfig_Image(image, err) {
 	var	info	= `DataBase::«${this.path}${this.branch}» is `;
@@ -356,8 +343,8 @@ async function my_server(req, res) {
 		else
 			cloud = file.content;
 	} else {
-		if((theFile[1] in Config) && (Config[theFile[1]] != ""))
-			cloud = Config[theFile[1]];
+		if((theFile[1].substr(1) in Config) && (Config[theFile[1].substr(1)] != ""))
+			cloud = Config[theFile[1].substr(1)];
 		else
 			cloud = file.content;
 	}
