@@ -6,7 +6,7 @@
 	"dependencies"	: {
 		"ipapi.co"	:"^0.3.0",
 		"websocket"	:"^1.0.0",
-		"firebase"	:"^5.7.0"
+		"firebase"	:"^8.2.0"
 	},
 	"description"	:"WoBistDu 2020",
 	"main"		:"app.js",
