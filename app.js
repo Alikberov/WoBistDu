@@ -343,7 +343,7 @@ async function my_server(req, res) {
 		if(Config.html != "") {
 			log(`Config.html`);
 			cloud = Config.html;
-		] else {
+		} else {
 			log(`file.content`);
 			cloud = file.content;
 		}
