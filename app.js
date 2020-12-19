@@ -287,7 +287,8 @@ function HotConfig_Set(snap) {
 				)
 			);
 		} else {
-			info += ` to "${s.substr(0,max)}${old.length > max ? "…" : ""}"`;
+			//info += ` to "${s.substr(0,max)}${old.length > max ? "…" : ""}"`;
+			info += ` to \n${s}\n….…`;
 			this.config[this.branch] = s;
 		}
 	} else
