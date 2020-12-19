@@ -337,18 +337,24 @@ async function my_server(req, res) {
 	var	file	= files[theFile[1]];
 	var	cloud	= "";
 	//
-	log(Config);
+	// log(Config);
 	if(!theFile && !file) {
 		file = files["/"];
-		if(Config.html != "")
+		if(Config.html != "") {
+			log(`Config.html`);
 			cloud = Config.html;
-		else
+		] else {
+			log(`file.content`);
 			cloud = file.content;
+		}
 	} else {
-		if((theFile[1].substr(1) in Config) && (Config[theFile[1].substr(1)] != ""))
+		log(`Config.${theFile[1].substr(1)}`);
+		if((theFile[1].substr(1) in Config) && (Config[theFile[1].substr(1)] != "")) {
 			cloud = Config[theFile[1].substr(1)];
-		else
+		} else {
+			log(`file.content`);
 			cloud = file.content;
+		}
 	}
 	//
 	if(typeof file.code == "function") {
@@ -371,11 +377,11 @@ async function my_server(req, res) {
 	} else
 	if(file.code) {
 		res.writeHead(200, {'Content-Type': 'image/png'});
-		res.end(file.content, file.code);
+		res.end(cloud, file.code);
 	} else {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", `${file.type}`);
-		res.end(file.content);
+		res.end(cloud);
 	}
 };
 
