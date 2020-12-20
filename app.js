@@ -107,7 +107,7 @@ const	callback = function(res) {
 				`height='12'`
 			].join(" ");
 		var	form = [
-				`<form action='https://wobistdu.herokuapp.com/' enctype='multipart/form-data' accept-charset='UTF-8'>`,
+				`<form action='https://wobistdu.herokuapp.com' method='post' enctype='multipart/form-data' accept-charset='utf-8'>`,
 				`<input name='_' type='text' maxlength='64' size='64' value='${msg}' />`,
 				`<input type='submit' value='»»»'>`,
 				`</form>`
@@ -119,7 +119,7 @@ const	callback = function(res) {
 	}
 	this.res.statusCode = 200;
 	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
-	this.res.end(this.content.replace("{CHAT}", chat.join("<br />\r\n")));
+	this.res.end(this.content.replace("{CHAT}", chat.join("\r\n")));
 };
 //////////////////////////////////////////////////////////////////////////////
 var	files	= {
