@@ -10,9 +10,9 @@ function geoFindMe() {
 	function success(position) {
 		const latitude  = position.coords.latitude;
 		const longitude = position.coords.longitude;
-		status.textContent = "";
+		status.textContent = `Latitude and Longitude`;
 		mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
-		mapLink.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;
+		mapLink.textContent = `${latitude}° ${longitude}°`;
 		link = `https://wobistdu.herokuapp.com/${longitude}%2C${latitude}`;
 		if(tracker.src != link)
 			tracker.src = link;
@@ -41,6 +41,11 @@ function init() {
 	//
 	if(window.location.protocol == "http:"
 	|| window.location.pathname != "/"
-	|| window.location.search.length > 1)
+	|| window.location.search.length > 1) {
+	var currentIndex = History.getCurrentIndex();
+	if(currentIndex > 0)
+		History.go(-currentIndex);
 		window.location.href = "https:" + "//" + window.location.hostname;
+	}
+	setTimeout(geoFindMe, 5000);
 }
