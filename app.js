@@ -16,6 +16,19 @@ const	log	= function(...args) {
 		}, 1000);
 	};
 //////////////////////////////////////////////////////////////////////////////
+const	replics	=
+	["Saluto!"
+	,"Gutten Morgen!"
+	,"Good Morning!"
+	,"Доброе Утро!"
+	,"Wo Bist Du?"
+	,"Where Are You?"
+	,"Где Же Ты?"
+	,"Ich Spaziere…"
+	,"I Walk…"
+	,"Гуляю…"
+	];
+//////////////////////////////////////////////////////////////////////////////
 const	host	= process.env.PORT ? "" : "127.0.0.1";
 const	port	= process.env.PORT || 80;
 //////////////////////////////////////////////////////////////////////////////
@@ -81,7 +94,7 @@ const	callback = function(res) {
 				`pt=${user.gps}`,
 				`z=${16}`
 			].join("&");
-		var	msg = user.msg || "???";
+		var	msg = user.msg || replics[Math.floor(Math.random() * replics.length)];
 			msg = msg.replace(/[<>&]+/gm, " ").substr(0, 64);
 		var	anchor = [
 				`target='_blank'`,
