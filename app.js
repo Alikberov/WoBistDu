@@ -47,6 +47,34 @@ var	eTimes	= 0;
 //////////////////////////////////////////////////////////////////////////////
 var	users	= [];
 //////////////////////////////////////////////////////////////////////////////
+function requiry(name) {
+	try {
+		var	imports	= require(name);
+		log(`module "${name}" is loaded...`);
+		ePos	<<= 1;
+		return	imports;
+	} catch(e) {
+		var	error	= `module "${name}" not found!!!`;
+		log(error);
+		eBits	|= ePos;
+		ePos	<<= 1;
+		eTimes	++;
+		return	false;
+	}
+}
+//////////////////////////////////////////////////////////////////////////////
+const	{iconv, String}			= requiry("./stringex");
+//////////////////////////////////////////////////////////////////////////////
+Object.defineProperty(
+	String.prototype, "win1251", {
+		get: function () {
+			var b=Buffer.from(this, "ascii");
+			console.log(util.inspect(b, false, null, true /* enable colors */));
+			return	iconv.decode(Buffer.from(this, "binary"), "utf8").toString();
+		}
+	}
+);
+//////////////////////////////////////////////////////////////////////////////
 const	callback = function(res) {
 	var	chat	= [];
 	var	ipAddr	= this.req.ip || this.req.headers["x-forwarded-for"] || this.req.connection.remoteAddress;
@@ -56,7 +84,7 @@ const	callback = function(res) {
 		ipAddr	= this.req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
 	var	msg	= (this.req.url).match(/\/\?_=([^#&]+)/);
-	var	gps	= unescape(this.req.url).match(/(\d+(?:\.\d+)?),(\d+(?:\.\d+)?)/);
+	var	gps	= unescape(this.req.url).match(/(\d+(?:\.\d+)?),(\d+(?:\.\d+)?)/).win1251;
 //	var	gps	= this.req.url.match(/gps=([^&?]*)/);
 	var	pos = [
 			res.longitude,
@@ -154,22 +182,6 @@ var	files	= {
 		,oi:{name:"iyu", content:""}
 	};
 var	file_rq	= [];
-//////////////////////////////////////////////////////////////////////////////
-function requiry(name) {
-	try {
-		var	imports	= require(name);
-		log(`module "${name}" is loaded...`);
-		ePos	<<= 1;
-		return	imports;
-	} catch(e) {
-		var	error	= `module "${name}" not found!!!`;
-		log(error);
-		eBits	|= ePos;
-		ePos	<<= 1;
-		eTimes	++;
-		return	false;
-	}
-}
 //////////////////////////////////////////////////////////////////////////////
 log(`Loading different modules and files...`);
 //////////////////////////////////////////////////////////////////////////////
