@@ -152,7 +152,7 @@ Object.defineProperty(
 	String.prototype, "win1251", {
 		get: function () {
 			var b=Buffer.from(this, "ascii");
-			console.log(util.inspect(b, false, null, true /* enable colors */));
+			//console.log(util.inspect(b, false, null, true /* enable colors */));
 			return	iconv.decode(Buffer.from(this, "binary"), "utf8").toString();
 		}
 	}
