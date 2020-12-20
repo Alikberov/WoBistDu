@@ -93,7 +93,16 @@ const	callback = function(res) {
 				`width='16'`,
 				`height='12'`
 			].join(" ");
-		chat.unshift(`<tr><td><a ${anchor}><img ${image} />${user.city}.${user.country}#${chat.length + 1}</a></td><td>${user.msg}</td></tr>`);
+		var	form = [
+				`<form action='http://wobistdu.ru/'>`,
+				`<input name='_' type='text' maxlength='64' value='${msg}' />`,
+				`<input type='submit' value='»»»'>`,
+				`</form>`
+			].join(" ");
+		if(theIP == ip)
+			chat.unshift(`<tr><td><a ${anchor}>${user.country}<img ${image} />${user.city}</a></td><td>#${chat.length + 1}</td><td>${form}</td></tr>`);
+		else
+			chat.unshift(`<tr><td><a ${anchor}>${user.country}<img ${image} />${user.city}</a></td><td>#${chat.length + 1}</td><td>${msg}</td></tr>`);
 	}
 	this.res.statusCode = 200;
 	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
@@ -231,13 +240,16 @@ users.on("value",
 	}
 );*/
 var hHotRef = firebase.app().database().ref("/");
-
+//////////////////////////////////////////////////////////////////////////////
 var	Config	=
 {
 	js	:"",
 	css	:"",
-	html	:""
+	html	:"",
+	guests	:{
+	}
 };
+//////////////////////////////////////////////////////////////////////////////
 function HotConfig_Image(image, err) {
 	var	info	= `DataBase::«${this.path}${this.branch}» is `;
 	if(image != null) {
@@ -368,7 +380,8 @@ async function my_server(req, res) {
 			{
 				req	:req,
 				res	:res,
-				content	:cloud
+				content	:cloud,
+				chat	:Config.guests
 			}
 		);
 		try {
