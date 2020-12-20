@@ -134,12 +134,7 @@ const	callback = function(res) {
 				`width='16'`,
 				`height='12'`
 			].join(" ");
-		var	form = [
-				`<form action='https://wobistdu.herokuapp.com' method='post' enctype='multipart/form-data' accept-charset='utf-8'>`,
-				`<input name='_' type='text' maxlength='64' size='64' value='${msg}' />`,
-				`<input type='submit' value='»»»'>`,
-				`</form>`
-			].join(" ");
+		var	form = Config.form.replace(/\$\{msg\}/gm, msg);
 		if(theIP == ip)
 			chat.unshift(`<tr><td><a ${anchor}>${user.country}<img ${image} />${user.city}</a></td><td>#${chat.length + 1}</td><td>${form}</td></tr>`);
 		else
@@ -271,6 +266,12 @@ var	Config	=
 	js	:"",
 	css	:"",
 	html	:"",
+	form	:[
+				`<form action='https://wobistdu.herokuapp.com' method='post' enctype='multipart/form-data' accept-charset='utf-8'>`,
+				"<input name='_' type='text' maxlength='64' size='64' value='${msg}' />",
+				`<input type='submit' value='»»»'>`,
+				`</form>`
+			].join("\r\n"),
 	guests	:{
 	}
 };
