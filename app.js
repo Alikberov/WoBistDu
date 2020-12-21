@@ -85,7 +85,10 @@ const	callback = function(res) {
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
 	var	msg	= "";
 	try {
-		msg = eval(Config.enc).match(/\/\?_=([^#&]+)/);
+		if(Config.enc)
+			msg = eval(Config.enc).match(/\/\?_=([^#&]+)/);
+		else
+			msg = this.req.url.normal.match(/\/\?_=([^#&]+)/);
 	} catch(e) {
 		log(e);
 	}
