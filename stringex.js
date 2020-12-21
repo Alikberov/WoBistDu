@@ -158,6 +158,17 @@ Object.defineProperty(
 	}
 );
 
+Object.defineProperty(
+	String.prototype, "normal", {
+		get: function () {
+			var	str = iconv.decode(Buffer.from(unescape(this), 'binary'), 'utf-8');
+			if(this.match(/%[89][0-9A-F]/))
+				return unescape(str);
+			return unescape(this);
+		}
+	}
+);
+
 module.exports = {
 	iconv	:iconv,
 	String	:String
