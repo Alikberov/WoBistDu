@@ -459,12 +459,12 @@ server.on('upgrade', (req, socket, head) => {
   socket.pipe(socket); // echo back
 });
 
-server.listen(port, host, () => {
+var ServerOnPort = server.listen(port, host, () => {
 	log(`Listen ${host}:${port}`);
 });
 
 const { Server } = require('ws');
-const wss = new Server({ server });
+const wss = new Server({ ServerOnPort });
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
