@@ -462,3 +462,23 @@ server.on('upgrade', (req, socket, head) => {
 server.listen(port, host, () => {
 	log(`Listen ${host}:${port}`);
 });
+
+const	ws		= requiry("ws");
+if(ws) {
+	var WebSocketServer = ws.Server
+	  , wss = new WebSocketServer({ server: server });
+
+	wss.on("connection", function connection(ws, req) {
+		var	req_ip	= req.headers["x-forwarded-for"] ? req.headers["x-forwarded-for"].split(",").pop() : req.connection.remoteAddress;
+		log(`User IP is ${req_ip}`);
+		//console.log(ws);
+	//  var location = url.parse(ws.upgradeReq.url, true);
+	  // you might use location.query.access_token to authenticate or share sessions
+	  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+
+		ws.on("message", function incoming(message) {
+			console.log("received: %s", message);
+		});
+		ws.send("something");
+	});
+}
