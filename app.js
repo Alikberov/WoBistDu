@@ -456,14 +456,19 @@ var ServerOnPort = server.listen(port, host, () => {
 const { Server } = require('ws');
 const wss = new Server({server: ServerOnPort });
 
-server.on('upgrade', (req, socket, head) => {
+/*server.on('upgrade', (req, socket, head) => {
   socket.write('HTTP/1.1 101 Web Socket Protocol Handshake\r\n' +
                'Upgrade: WebSocket\r\n' +
                'Connection: Upgrade\r\n' +
                '\r\n');
 	wss.handleUpgrade(req, socket, head, (sock) => handleDeviceConnection(new DeviceWebSocketWrapper(sock), req.headers));
   socket.pipe(socket); // echo back
-});
+});*/
+server.on('upgrade', function (request, socket, head) {
+  wss.handleUpgrade(request, socket, head, function (websocket) {
+     wss.emit('connection', websocket, request);
+  })
+})
 
 /* wss.handleUpgrade(request, socket, head, function done(ws) {
       wss.emit('connection', ws, request, client);
