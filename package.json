@@ -7,6 +7,7 @@
 		"iconv-lite"	:"^0.6.2",
 		"ipapi.co"	:"^0.3.0",
 		"websocket"	:"^1.0.0",
+		"ws"		:"^7.4.1",
 		"firebase"	:"^8.2.0"
 	},
 	"description"	:"WoBistDu 2020",
