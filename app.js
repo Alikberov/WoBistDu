@@ -463,6 +463,23 @@ server.listen(port, host, () => {
 	log(`Listen ${host}:${port}`);
 });
 
+const { Server } = require('ws');
+const wss = new Server({ server });
+
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('message', (msg) => {
+    console.log(`»»»${msg}`);
+  });
+});
+setInterval(() => {
+  wss.clients.forEach((client) => {
+    client.send(new Date().toTimeString());
+  });
+}, 1000);
+
+/*
 const	ws		= requiry("ws");
 if(ws) {
 	var WebSocketServer = ws.Server
@@ -482,3 +499,4 @@ if(ws) {
 		ws.send("something");
 	});
 }
+*/
