@@ -336,6 +336,13 @@ function HotConfig_Set(snap) {
 		} else {
 			//info += ` to "${s.substr(0,max)}${old.length > max ? "…" : ""}"`;
 			info += ` to \n${s}\n….…`;
+			var	pth	= "/" + (this.branch == "index" ? "" : this.branch);
+			if(pth in files) {
+				var	specs = files[pth];
+				if(specs)
+					for(var opt in specs)
+						s = s.replace(new RegExp(`\\$\\{${opt}\\}`, "gm"), specs[opt]);
+			}
 			this.config[this.branch] = s;
 		}
 	} else
