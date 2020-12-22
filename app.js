@@ -451,7 +451,7 @@ const	wsocket	= requiry("websocket");
 const	server	= http.createServer(my_server);
 
 server.on('upgrade', (req, socket, head) => {
-  socket.write('HTTP/1.1 101 Web Socket Protocol Han */dshake\r\n' +
+  socket.write('HTTP/1.1 101 Web Socket Protocol Handshake\r\n' +
                'Upgrade: WebSocket\r\n' +
                'Connection: Upgrade\r\n' +
                '\r\n');
