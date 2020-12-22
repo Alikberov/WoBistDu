@@ -463,7 +463,7 @@ server.listen(port, host, () => {
 	log(`Listen ${host}:${port}`);
 });
 
-const	ws		= requiry("wss");
+const	ws		= requiry("ws");
 if(ws) {
 	var WebSocketServer = ws.Server
 	  , wss = new WebSocketServer({ server: server });
