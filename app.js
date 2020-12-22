@@ -449,15 +449,6 @@ const	wsocket	= requiry("websocket");
 //const	WebSocketServer	= wsocket && wsocket.server;
 
 const	server	= http.createServer(my_server);
-
-server.on('upgrade', (req, socket, head) => {
-  socket.write('HTTP/1.1 101 Web Socket Protocol Handshake\r\n' +
-               'Upgrade: WebSocket\r\n' +
-               'Connection: Upgrade\r\n' +
-               '\r\n');
-
-  socket.pipe(socket); // echo back
-});
 var ServerOnPort = server.listen(port, host, () => {
 	log(`Listen ${host}:${port}`);
 });
@@ -465,9 +456,18 @@ var ServerOnPort = server.listen(port, host, () => {
 const { Server } = require('ws');
 const wss = new Server({server: ServerOnPort });
 
- wss.handleUpgrade(request, socket, head, function done(ws) {
+server.on('upgrade', (req, socket, head) => {
+  socket.write('HTTP/1.1 101 Web Socket Protocol Handshake\r\n' +
+               'Upgrade: WebSocket\r\n' +
+               'Connection: Upgrade\r\n' +
+               '\r\n');
+	wss.handleUpgrade(req, socket, head, (sock) => handleDeviceConnection(new DeviceWebSocketWrapper(sock), req.headers));
+  socket.pipe(socket); // echo back
+});
+
+/* wss.handleUpgrade(request, socket, head, function done(ws) {
       wss.emit('connection', ws, request, client);
-    });
+    });*/
 wss.on('connection', (ws) => {
   console.log('Client connected');
   ws.on('close', () => console.log('Client disconnected'));
