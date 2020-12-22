@@ -458,7 +458,6 @@ server.on('upgrade', (req, socket, head) => {
 
   socket.pipe(socket); // echo back
 });
-
 var ServerOnPort = server.listen(port, host, () => {
 	log(`Listen ${host}:${port}`);
 });
@@ -466,6 +465,9 @@ var ServerOnPort = server.listen(port, host, () => {
 const { Server } = require('ws');
 const wss = new Server({server: ServerOnPort });
 
+ wss.handleUpgrade(request, socket, head, function done(ws) {
+      wss.emit('connection', ws, request, client);
+    });
 wss.on('connection', (ws) => {
   console.log('Client connected');
   ws.on('close', () => console.log('Client disconnected'));
