@@ -465,9 +465,13 @@ const wss = new Server({server: ServerOnPort });
   socket.pipe(socket); // echo back
 });*/
 server.on('upgrade', function (request, socket, head) {
-  wss.handleUpgrade(request, socket, head, function (websocket) {
-     wss.emit('connection', websocket, request);
-  })
+	try {
+		wss.handleUpgrade(request, socket, head, function (websocket) {
+			wss.emit('connection', websocket, request);
+		})
+	} catch(e) {
+		log(e);
+	}
 })
 
 /* wss.handleUpgrade(request, socket, head, function done(ws) {
