@@ -446,7 +446,7 @@ async function my_server(req, res) {
 const	http	= requiry("http");
 const	ipapi	= requiry("ipapi.co");
 const	wsocket	= requiry("websocket");
-const	WebSocketServer	= wsocket && wsocket.server;
+//const	WebSocketServer	= wsocket && wsocket.server;
 
 const	server	= http.createServer(my_server);
 
