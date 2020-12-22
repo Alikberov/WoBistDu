@@ -464,7 +464,7 @@ var ServerOnPort = server.listen(port, host, () => {
 });
 
 const { Server } = require('ws');
-const wss = new Server({ ServerOnPort });
+const wss = new Server({server: ServerOnPort });
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
