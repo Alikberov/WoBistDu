@@ -276,10 +276,19 @@ var	Config	=
 	css	:"",
 	html	:"",
 	form	:[
-				`<form action='https://wobistdu.herokuapp.com' method='post' enctype='multipart/form-data' accept-charset='utf-8'>`,
-				"<input name='_' type='text' maxlength='64' size='64' value='${msg}' />",
-				`<input type='submit' value='»»»'>`,
-				`</form>`
+		`<form action='https://wobistdu.herokuapp.com' data-method='post' data-enctype='multipart/form-data' accept-charset='utf-8'>`,
+		`<input name='_' list='cookies' type='text' maxlength='64' size='64' value='${msg}' placeholder='Put Your replic at here und push [»»»] bitte' /><input type='submit' value='»»»' />`,
+		`<datalist id='cookies'>`,
+		`<option value='Yesterday… All my troubles seemed so far away!' />`,
+		`<option value='Love me tender, love me sweet, Never let me go…' />`,
+		`<option value='Follow the Moskva,Down to Gorky Park,Listening to the wind of…' />`,
+		`<option value='А я иду шагаю по…' />`,
+		`<option value='Я в баре с блекджеком и … шашлыком!' />`,
+		`<option value='Хорошо в краю родном, пахнет рыбой и пивком!' />`,
+		`<option value='Бухгалтер, милый мой бухгалтер!' />`,
+		`<option value='Каждую ночь ты сидишь у окна перемещая звёзды…' />`,
+		`</datalist>`,
+		`</form>`
 			].join("\r\n"),
 	guests	:{
 	}
