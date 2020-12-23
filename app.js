@@ -277,7 +277,7 @@ var	Config	=
 	html	:"",
 	form	:[
 		`<form action='https://wobistdu.herokuapp.com' data-method='post' data-enctype='multipart/form-data' accept-charset='utf-8'>`,
-		`<input name='_' list='cookies' type='text' maxlength='64' size='64' value='${msg}' placeholder='Put Your replic at here und push [»»»] bitte' /><input type='submit' value='»»»' />`,
+		"<input name='_' list='cookies' type='text' maxlength='64' size='64' value='${msg}' placeholder='Put Your replic at here und push [»»»] bitte' /><input type='submit' value='»»»' />",
 		`<datalist id='cookies'>`,
 		`<option value='Yesterday… All my troubles seemed so far away!' />`,
 		`<option value='Love me tender, love me sweet, Never let me go…' />`,
