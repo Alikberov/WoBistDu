@@ -343,6 +343,9 @@ function HotConfig_Set(snap) {
 	if("number" == typeof old)
 		info += `changed from (${old})`;
 	else
+	if("function" == typeof old)
+		info += `changed from Function`;
+	else
 	if(null == old && s == null)
 		info += `steel «${old}»`;
 	else
@@ -363,12 +366,14 @@ function HotConfig_Set(snap) {
 		} else
 		if(this.branch == "callback__req") {
 			var	the_callback;
-			var	the_args = this.branch.split(/__/);
+			var	the_args = this.branch.split("__");
 			try {
 				the_callback = new Function(the_args.slice(1).join(), s);
+				info += ` to Function is OK…`;
 				log(`function ${the_args[0]}(${the_args.slice(1).join()}) { ... } is loaded…`);
-				this.config[this.branch] = the_callback;
+				this.config[the_args[0]] = the_callback;
 			} catch(e) {
+				info += ` to Function is crashed…`;
 				log(`function ${the_args[0]}(${the_args.slice(1).join()}) { ... } is crashed…`);
 				log(e);
 			}
