@@ -333,7 +333,9 @@ function HotConfig_Set(snap) {
 	var	s = snap.val();
 	var	old = this.config[this.branch];
 	var	info	= `DataBase::«${this.path}${this.branch}» is `;
-	info += `changed from `;
+	var	the_args = this.branch.split("__");
+	var	the_func = the_args[0];
+	var	the_argz = the_args.slice(1).join();
 	if("image" == typeof old)
 		info += `changed from Image(${old.width}x${old.height})`
 	else
@@ -364,17 +366,17 @@ function HotConfig_Set(snap) {
 				)
 			);
 		} else
-		if(this.branch == "callback__req") {
+		if((the_func in this.config) && ("function" == typeof this.config[the_func])) {
 			var	the_callback;
 			var	the_args = this.branch.split("__");
 			try {
-				the_callback = new Function(the_args.slice(1).join(), s);
+				the_callback = new Function(the_argz, s);
 				info += ` to Function is OK…`;
-				log(`function ${the_args[0]}(${the_args.slice(1).join()}) { ... } is loaded…`);
+				log(`function ${the_func}(${the_argz}) { ... } is loaded…`);
 				this.config[the_args[0]] = the_callback;
 			} catch(e) {
 				info += ` to Function is crashed…`;
-				log(`function ${the_args[0]}(${the_args.slice(1).join()}) { ... } is crashed…`);
+				log(`function ${the_func}(${the_argz}) { ... } is crashed…`);
 				log(e);
 			}
 		} else {
