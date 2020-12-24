@@ -75,7 +75,7 @@ var	{iconv, String}			= requiry("./stringex");
 	}
 );*/
 //////////////////////////////////////////////////////////////////////////////
-const	callback = function(res) {
+var	callback = function(res) {
 	var	chat	= [];
 	var	ipAddr	= this.req.ip || this.req.headers["x-forwarded-for"] || this.req.connection.remoteAddress;
 	if(ipAddr) 
@@ -152,6 +152,23 @@ const	callback = function(res) {
 	this.res.setHeader("Content-Type", "text/html; charset=utf-8");
 	this.res.end(this.content.replace("{CHAT}", chat.join("\r\n")));
 };
+function try_callback(res) {
+	var	cb;
+	var	bnd =	{
+				req	:this.req,
+				res	:res,
+				content	:this.content,
+				chat	:this.chat
+			};
+	try {
+		cb = Config.callback.bind(bnd);
+		cb(res);
+	} catch(e) {
+		log(e);
+		cb = file.code.bind(bnd);
+		cb(res);
+	}
+}
 //////////////////////////////////////////////////////////////////////////////
 var	files	= {
 		"/css"	:{				// Cascade Styles
@@ -176,7 +193,7 @@ var	files	= {
 			name	:"index.html",
 			content	:"",
 			type	:"text/html; charset=utf-8",
-			code	:callback,
+			code	:try_callback,
 			specs	:{
 				discord	:discord,
 				timeout	:timeout
@@ -291,7 +308,8 @@ var	Config	=
 		`</form>`
 			].join("\r\n"),
 	guests	:{
-	}
+	},
+	callback:callback
 };
 //////////////////////////////////////////////////////////////////////////////
 function HotConfig_Image(image, err) {
@@ -342,6 +360,18 @@ function HotConfig_Set(snap) {
 					}
 				)
 			);
+		} else
+		if(this.branch == "callback__req") {
+			var	the_callback;
+			var	the_args = this.branch.split(/__/);
+			try {
+				the_callback = new Function(the_args.slice(1).join(), s);
+				log(`function ${the_args[0]}(${the_args.slice(1).join()}) { ... } is loaded…`);
+				this.config[this.branch] = the_callback;
+			} catch(e) {
+				log(`function ${the_args[0]}(${the_args.slice(1).join()}) { ... } is crashed…`);
+				log(e);
+			}
 		} else {
 			//info += ` to "${s.substr(0,max)}${old.length > max ? "…" : ""}"`;
 			info += ` to \n${s}\n….…`;
