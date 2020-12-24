@@ -156,7 +156,7 @@ function try_callback(res) {
 	var	cb;
 	var	bnd =	{
 				req	:this.req,
-				res	:res,
+				res	:this.res,
 				content	:this.content,
 				chat	:this.chat
 			};
