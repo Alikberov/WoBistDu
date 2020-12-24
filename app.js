@@ -165,7 +165,7 @@ function try_callback(res) {
 		cb(res);
 	} catch(e) {
 		log(e);
-		cb = file.code.bind(bnd);
+		cb = callback.bind(bnd);
 		cb(res);
 	}
 }
