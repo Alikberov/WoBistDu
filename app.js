@@ -105,13 +105,17 @@ var	callback = function(res) {
 			msg	:"",
 			pos	:"",
 			city	:"",
-			country	:""
+			country	:"",
+			visits	:0,
+			voyages	:0
 		};
 	log(`${this.req.url} ${msg}`);
 	if(msg && (!gps || (unescape(msg[1]) != gps[0]))) {
 		users[theIP].msg = unescape(msg[1]).replace(/\+/g, " ");
 	}
+	users[theIP].visits ++;
 	if(users[theIP].pos != pos)
+		users[theIP].voyages ++,
 		users[theIP].gps = pos,
 		users[theIP].pos = pos;
 	if(gps) {
@@ -135,7 +139,8 @@ var	callback = function(res) {
 		var	anchor = [
 				`target='_blank'`,
 				`name='${chat.length + 1}'`,
-				`href='${yandex}${args}'`
+				`href='${yandex}${args}'`,
+				`title='${user.voyages}/${user.visits}'`
 			].join(" ");
 		var	image = [
 				`src='${flags}${(user.country || "RU").toLowerCase()}.svg'`,
