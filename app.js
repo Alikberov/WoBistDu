@@ -479,7 +479,7 @@ hHotRef
 			var	data = snap.val();
 			console.log("PLACES READ");
 			try {
-				users = eval(data);
+				users = eval("{" + data + "}");
 			} catch(e) {
 				console.log(e);
 			}
