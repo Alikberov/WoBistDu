@@ -17,26 +17,46 @@ const	log	= function(...args) {
 	};
 
 process.on('SIGTERM', signal => {
-  console.log(`Process ${process.pid} received a SIGTERM signal`)
+	try {
+		var	places	= [];
+		for(var ip in users) {
+			places.push(
+				`"${ip}":{` +
+				`"gps":"${users[id].gps}",` +
+				`"msg":"${users[id].msg}",` +
+				`"pos":"${users[id].pos}",` +
+				`"city":"${users[id].city}",` +
+				`"country":"${users[id].country}",` +
+				`"visits":"${users[id].visits}",` +
+				`"voyages":"${users[id].voyages}"`
+				);
+		}
+		hHotRef.child("places").set(places.join("\r\n"));
+	} catch(e) {
+		console.log(`process.on-SIGTERM:`);
+		console.log(e);
+	}
+  console.log(`process.on-SIGTERM: Process ${process.pid} received a SIGTERM signal`)
   process.exit(0)
 })
 
+process.on('exit', code => {
+  // Only synchronous calls
+  console.log(`process.on-exit: Process exited with code: ${code}`)
+})
+//////////////////////////////////////////////////////////////////////////////
 process.on('SIGINT', signal => {
-  console.log(`Process ${process.pid} has been interrupted`)
+  console.log(`process.on-SIGINT: Process ${process.pid} has been interrupted`)
   process.exit(0)
 })
 
 process.on('beforeExit', code => {
   // Can make asynchronous calls
+  console.log(`process.on-beforeExit: Process will exit with code: ${code}`)
   setTimeout(() => {
     console.log(`Process will exit with code: ${code}`)
     process.exit(code)
   }, 100)
-})
-
-process.on('exit', code => {
-  // Only synchronous calls
-  console.log(`Process exited with code: ${code}`)
 })
 //////////////////////////////////////////////////////////////////////////////
 const	replics	=
