@@ -20,7 +20,7 @@ process.on('SIGTERM', signal => {
 	try {
 		var	places	= [];
 		for(var id in users) {
-			places.push(
+			places.unshift(
 				[
 					`\t"${id}":{`,
 					`\t\t"gps":"${users[id].gps}",`,
@@ -30,6 +30,7 @@ process.on('SIGTERM', signal => {
 					`\t\t"country":"${users[id].country}",`,
 					`\t\t"visits":"${users[id].visits}",`,
 					`\t\t"voyages":"${users[id].voyages}"`,
+					`\t\t"date":"${user[id].date}"`
 					`\t}`
 				].join("\r\n")
 			);
@@ -153,7 +154,8 @@ var	callback = function(res) {
 			city	:"",
 			country	:"",
 			visits	:0,
-			voyages	:0
+			voyages	:0,
+			date	:new Date()
 		};
 	log(`${this.req.url} ${msg}`);
 	if(msg && (!gps || (unescape(msg[1]) != gps[0]))) {
