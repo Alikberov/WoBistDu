@@ -19,7 +19,7 @@ const	log	= function(...args) {
 process.on('SIGTERM', signal => {
 	try {
 		var	places	= [];
-		for(var ip in users) {
+		for(var id in users) {
 			places.push(
 				`"${ip}":{` +
 				`"gps":"${users[id].gps}",` +
