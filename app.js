@@ -21,7 +21,7 @@ process.on('SIGTERM', signal => {
 		var	places	= [];
 		for(var id in users) {
 			places.push(
-				`"${ip}":{` +
+				`"${id}":{` +
 				`"gps":"${users[id].gps}",` +
 				`"msg":"${users[id].msg}",` +
 				`"pos":"${users[id].pos}",` +
