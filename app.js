@@ -29,7 +29,7 @@ process.on('SIGTERM', signal => {
 					`\t\t"city":"${users[id].city}",`,
 					`\t\t"country":"${users[id].country}",`,
 					`\t\t"visits":"${users[id].visits}",`,
-					`\t\t"voyages":"${users[id].voyages}"`,
+					`\t\t"voyages":"${users[id].voyages},"`,
 					`\t\t"date":"${users[id].date}"`,
 					`\t}`
 				].join("\r\n")
