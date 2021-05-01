@@ -560,13 +560,13 @@ hHotRef
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
 	var	cb;
-	/*var	ipAddr	= req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+	var	ipAddr	= req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 	if(ipAddr) 
 		ipAddr	= ipAddr.split(",").pop();
 	else
 		ipAddr	= req.connection.remoteAddress;
-	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");*/
-	var	theIP	= DoNick(req);
+	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
+	//var	theIP	= DoNick(req);
 	var	theFile	= req.url.match(file_rq);
 	//
 	//log(req);
