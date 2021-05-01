@@ -63,6 +63,60 @@ process.on('beforeExit', code => {
   }, 100)
 })
 //////////////////////////////////////////////////////////////////////////////
+function Do_IP_Slabs() {
+	var	cons	= "BCDFGHKMNPSTVYZ".split(""),
+		vovels	= "A LA NA RA E LE NE RE I LI NI RI O LO NO RO U LU NU RU".split(" "),
+		i, j, k, n, c,
+		Slabs	= ["X"],
+		masks =
+		[0xFFFFF // BA	BLA	BNA	BRA	BE	BLE	BNE	BRE	BI	BLI	BNI	BRI	BO	BLO	BNO	BRO	BU	BLU	BNU	BRU
+		,0x88888 // CA				CE				CI				CO				CU
+		,0xFFFFF // DA	DLA	DNA	DRA	DE	DLE	DNE	DRE	DI	DLI	DNI	DRI	DO	DLO	DNO	DRO	DU	DLU	DNU	DRU
+		,0xDDDDD // FA	FLA		FRA	FE	FLE		FRE	FI	FLI		FRI	FO	FLO		FRO	FU	FLU		FRU
+		,0xFFFFF // GA	GLA	GNA	GRA	GE	GLE	GNE	GRE	GI	GLI	GNI	GRI	GO	GLO	GNO	GRO	GU	GLU	GNU	GRU
+		,0xFFFFF // HA	HLA	HNA	HRA	HE	HLE	HNE	HRE	HI	HLI	HNI	HRI	HO	HLO	HNO	HRO	HU	HLU	HNU	HRU
+		,0xFFFFF // KA	KLA	KNA	KRA	KE	KLE	KNE	KRE	KI	KLI	KNI	KRI	KO	KLO	KNO	KRO	KU	KLU	KNU	KRU
+		,0xFFFFF // MA	MLA	MNA	MRA	ME	MLE	MNE	MRE	MI	MLI	MNI	MRI	MO	MLO	MNO	MRO	MU	MLU	MNU	MRU
+		,0xDDDDD // NA	NLA		NRA	NE	NLE		NRE	NI	NLI		NRI	NO	NLO		NRO	NU	NLU		NRU
+		,0xFFFFF // PA	PLA	PNA	PRA	PE	PLE	PNE	PRE	PI	PLI	PNI	PRI	PO	PLO	PNO	PRO	PU	PLU	PNU	PRU
+		,0xFFFFF // SA	SLA	SNA	SRA	SE	SLE	SNE	SRE	SI	SLI	SNI	SRI	SO	SLO	SNO	SRO	SU	SLU	SNU	SRU
+		,0xFFFFF // TA	TLA	TNA	TRA	TE	TLE	TNE	TRE	TI	TLI	TNI	TRI	TO	TLO	TNO	TRO	TU	TLU	TNU	TRU
+		,0xFFFF0 // VA	VLA	VNA	VRA	VE	VLE	VNE	VRE	VI	VLI	VNI	VRI	VO	VLO	VNO	VRO
+		,0x88088 // YA				YE								YO				YU
+		,0xFFFFF];//ZA	ZLA	ZNA	ZRA	ZE	ZLE	ZNE	ZRE	ZI	ZLI	ZNI	ZRI	ZO	ZLO	ZNO	ZRO	ZU	ZLU	ZNU	ZRU
+	for(i = 0, n = 1; i < masks.length; ++ i) {
+		c = masks[i];
+		for(j = 1 << 19, k = 0; j > 0; j >>= 1, ++ k) {
+			if(c & j)
+				Slabs[n] = cons[i] + vovels[k],
+				Slabs[cons[i] + vovels[k]] = n,
+				n ++;
+		}
+	}
+	this.decode =
+	function(index) {
+		var	word	= "";
+		do {
+			word = Slabs[index & 255] + word;
+		} while(index = (index >> 8) & 16777215);
+		return word;
+	};
+	this.encode =
+	function(word) {
+		var	index	= 0;
+		var	slab;
+		do {
+			slab = word.toUpperCase().match(/(X|[BCDFGHKMNPSTVYZ][LNR]?[AEIUO])/);
+			if(slab && slab[0] in Slabs)
+				index = (index << 8) + Slabs[slab[0]],
+				word = word.substr(slab[0].length);
+		} while(slab);
+		return index;
+	};
+	return	this;
+}
+const	Slabs = Do_IP_Slabs();
+//////////////////////////////////////////////////////////////////////////////
 const	replics	=
 	["Saluto!"
 	,"Gutten Morgen!"
@@ -111,6 +165,7 @@ function requiry(name) {
 }
 //////////////////////////////////////////////////////////////////////////////
 var	{iconv, String}			= requiry("./stringex");
+const	ipInt				= requiry("ip-to-int");
 //////////////////////////////////////////////////////////////////////////////
 /*Object.defineProperty(
 	String.prototype, "win1251", {
@@ -121,15 +176,27 @@ var	{iconv, String}			= requiry("./stringex");
 		}
 	}
 );*/
+function DoNick(req) {
+	var	ipAddr	= req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+	if(ipAddr) 
+		ipAddr	= ipAddr.split(",").pop();
+	else
+		ipAddr	= req.connection.remoteAddress;
+	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
+		theIP	= Slabs.decode(ipInt(theIP).toInt());
+	return theIP;
+}
 //////////////////////////////////////////////////////////////////////////////
 var	callback = function(res) {
 	var	chat	= [];
-	var	ipAddr	= this.req.ip || this.req.headers["x-forwarded-for"] || this.req.connection.remoteAddress;
+/*	var	ipAddr	= this.req.ip || this.req.headers["x-forwarded-for"] || this.req.connection.remoteAddress;
 	if(ipAddr) 
 		ipAddr	= ipAddr.split(",").pop();
 	else
 		ipAddr	= this.req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
+		theIP	= Slabs.decode(ipInt(theIP).toInt());*/
+	var	theIP	= DoNick(this.req);
 	var	msg	= "";
 	try {
 		if(Config.enc)
@@ -493,12 +560,13 @@ hHotRef
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
 	var	cb;
-	var	ipAddr	= req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+	/*var	ipAddr	= req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 	if(ipAddr) 
 		ipAddr	= ipAddr.split(",").pop();
 	else
 		ipAddr	= req.connection.remoteAddress;
-	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");
+	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");*/
+	var	theIP	= DoNick(this.req);
 	var	theFile	= req.url.match(file_rq);
 	//
 	//log(req);
