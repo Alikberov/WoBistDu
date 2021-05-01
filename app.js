@@ -566,7 +566,7 @@ async function my_server(req, res) {
 	else
 		ipAddr	= req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join(".");*/
-	var	theIP	= DoNick(this.req);
+	var	theIP	= DoNick(req);
 	var	theFile	= req.url.match(file_rq);
 	//
 	//log(req);
