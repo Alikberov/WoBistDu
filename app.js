@@ -21,17 +21,20 @@ process.on('SIGTERM', signal => {
 		var	places	= [];
 		for(var id in users) {
 			places.push(
-				`"${id}":{` +
-				`"gps":"${users[id].gps}",` +
-				`"msg":"${users[id].msg}",` +
-				`"pos":"${users[id].pos}",` +
-				`"city":"${users[id].city}",` +
-				`"country":"${users[id].country}",` +
-				`"visits":"${users[id].visits}",` +
-				`"voyages":"${users[id].voyages}"`
-				);
+				[
+					`\t"${id}":{`,
+					`\t\t"gps":"${users[id].gps}",`,
+					`\t\t"msg":"${users[id].msg}",`,
+					`\t\t"pos":"${users[id].pos}",`,
+					`\t\t"city":"${users[id].city}",`,
+					`\t\t"country":"${users[id].country}",`,
+					`\t\t"visits":"${users[id].visits}",`,
+					`\t\t"voyages":"${users[id].voyages}"`,
+					`\t}`
+				].join("\r\n")
+			);
 		}
-		hHotRef.child("places").set(places.join("\r\n"));
+		hHotRef.child("places").set(places.join(",\r\n"));
 	} catch(e) {
 		console.log(`process.on-SIGTERM:`);
 		console.log(e);
