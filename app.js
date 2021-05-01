@@ -16,9 +16,10 @@ const	log	= function(...args) {
 		}, 1000);
 	};
 
-process.on('SIGTERM', signal => {
+function SaveUsers() {
 	try {
 		var	places	= [];
+		console.log(`USERS SAVING...`);
 		for(var id in users) {
 			places.unshift(
 				[
@@ -36,6 +37,14 @@ process.on('SIGTERM', signal => {
 			);
 		}
 		hHotRef.child("places").set(places.join(",\r\n"));
+	} catch(e) {
+		console.log(e);
+	}
+}
+
+process.on('SIGTERM', signal => {
+	try {
+		SaveUsers();
 	} catch(e) {
 		console.log(`process.on-SIGTERM:`);
 		console.log(e);
@@ -213,7 +222,7 @@ var	callback = function(res) {
 			res.latitude
 		].join();
 	//
-	if(!(theIP in users))
+	if(!(theIP in users)) {
 		users[theIP] = {
 			gps	:"",
 			msg	:"",
@@ -224,6 +233,8 @@ var	callback = function(res) {
 			voyages	:0,
 			date	:new Date()
 		};
+		SaveUsers();
+	}
 	log(`${this.req.url} ${msg}`);
 	if(msg && (!gps || (unescape(msg[1]) != gps[0]))) {
 		users[theIP].msg = unescape(msg[1]).replace(/\+/g, " ");
