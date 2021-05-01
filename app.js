@@ -472,6 +472,19 @@ function HotConfig_Init(map, callback, ref, path) {
 	}
 }
 HotConfig_Init(Config, HotConfig_Set, hHotRef, "/");
+hHotRef
+	.child("places")
+	.on("value",
+		function(snap) {
+			var	data = snap.val();
+			console.log("PLACES READ");
+			try {
+				users = eval(data);
+			} catch(e) {
+				console.log(e);
+			}
+		}
+	);
 
 ////////////////////////////////////////////////////////////////
 async function my_server(req, res) {
