@@ -626,8 +626,8 @@ async function my_server(req, res) {
 			cloud = file.content;
 		}
 	} else {
-		log(`Config.${cfgId}`);
-		if((typeof file.name) == "function") {
+		log(`Config.${cfgId} is ${typeof file.name}`);
+		if((typeof file.name) != "string") {
 			cloud = file.name();
 		} else
 		if((cfgId in Config) && (Config[cfgId] != "")) {
