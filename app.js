@@ -616,6 +616,8 @@ async function my_server(req, res) {
 	var	cloud	= "";
 	//
 	// log(Config);
+	log(`theFile:${theFile[1]}`);
+	log(`file:${file}`);
 	if(!theFile && !file) {
 		file = files["/"];
 		if(Config.html != "") {
