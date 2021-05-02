@@ -41,6 +41,27 @@ function SaveUsers() {
 		console.log(e);
 	}
 }
+function user_list() {
+	var	places	= [];
+	console.log(`USERS SHOW...`);
+	for(var id in users) {
+		places.unshift(
+			[
+				`\t"${id}":{`,
+				`\t\t"gps":"${users[id].gps}",`,
+				`\t\t"msg":"${users[id].msg}",`,
+				`\t\t"pos":"${users[id].pos}",`,
+				`\t\t"city":"${users[id].city}",`,
+				`\t\t"country":"${users[id].country}",`,
+				`\t\t"visits":"${users[id].visits}",`,
+				`\t\t"voyages":"${users[id].voyages}",`,
+				`\t\t"date":"${users[id].date}"`,
+				`\t}`
+			].join("\r\n")
+		);
+	}
+	return places.join(",\r\n");
+}
 
 process.on('SIGTERM', signal => {
 	try {
@@ -329,6 +350,12 @@ var	files	= {
 				discord	:discord,
 				timeout	:timeout
 			}
+		},
+		"/users":{
+			name	:user_list,
+			content	:"",
+			type	:"application/x-javascript; charset=utf-8",
+			code	:null
 		}
 		,oi:{name:"iyu", content:""}
 	};
@@ -340,27 +367,29 @@ const	fs	= requiry("fs");
 const	path	= requiry("path");
 //////////////////////////////////////////////////////////////////////////////
 for(id in files) {
-	var	p = path.join(__dirname, files[id].name);
-	var	rc = read_content.bind({path: id, file: files[id]});
-	//
-	function read_content(err, data){
-		if(err)
-			log(`${err}`);
-		else {
-			log(`file ${this.path}:"${this.file.name}" - ${data.length} bytes`);
-			var	specs = this.file.specs;
-			if(specs)
-				for(var opt in specs)
-					data = data.replace(new RegExp(`\\$\\{${opt}\\}`, "gm"), specs[opt]);
-			this.file.content = data;
+	if(typeof files[id].name == "string") {
+		var	p = path.join(__dirname, files[id].name);
+		var	rc = read_content.bind({path: id, file: files[id]});
+		//
+		function read_content(err, data){
+			if(err)
+				log(`${err}`);
+			else {
+				log(`file ${this.path}:"${this.file.name}" - ${data.length} bytes`);
+				var	specs = this.file.specs;
+				if(specs)
+					for(var opt in specs)
+						data = data.replace(new RegExp(`\\$\\{${opt}\\}`, "gm"), specs[opt]);
+				this.file.content = data;
+			}
 		}
+		//
+		if(typeof files[id].code == "string")
+			fs.readFile(p, rc);
+		else
+			fs.readFile(p, {encoding: "utf-8"}, rc);
+		file_rq.push(`(${id.replace(/(\/|\\|\.)/g, "\\$1")})`);
 	}
-	//
-	if(typeof files[id].code == "string")
-		fs.readFile(p, rc);
-	else
-		fs.readFile(p, {encoding: "utf-8"}, rc);
-	file_rq.push(`(${id.replace(/(\/|\\|\.)/g, "\\$1")})`);
 }
 log(`Matches: ${file_rq.join("|")}`);
 file_rq = new RegExp(`(${file_rq.join("|")})`);
@@ -598,6 +627,9 @@ async function my_server(req, res) {
 		}
 	} else {
 		log(`Config.${cfgId}`);
+		if((typeof file.name) == "function") {
+			cloud = file.name();
+		} else
 		if((cfgId in Config) && (Config[cfgId] != "")) {
 			cloud = Config[cfgId];
 		} else {
