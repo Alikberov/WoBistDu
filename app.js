@@ -616,8 +616,8 @@ async function my_server(req, res) {
 	var	cloud	= "";
 	//
 	// log(Config);
-	log(`theFile:${theFile[1]}`);
-	log(`file:${file}`);
+	console.log(`theFile:${theFile[1]}`);
+	console.log(`file:${file}`);
 	if(!theFile && !file) {
 		file = files["/"];
 		if(Config.html != "") {
@@ -628,8 +628,8 @@ async function my_server(req, res) {
 			cloud = file.content;
 		}
 	} else {
-		log(`Config.${cfgId} is ${typeof file.name}`);
-		log(`${file.name} is ${typeof file.name}`);
+		console.log(`Config.${cfgId} is ${typeof file.name}`);
+		console.log(`${file.name} is ${typeof file.name}`);
 		if((typeof file.name) != "string") {
 			cloud = file.name();
 		} else
