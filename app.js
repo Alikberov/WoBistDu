@@ -32,7 +32,7 @@ function SaveUsers() {
 					`\t\t"visits":"${users[id].visits}",\t// Посещений`,
 					`\t\t"voyages":"${users[id].voyages}",\t// Перемещений`,
 					`\t\t"date":"${users[id].date}"`,
-					`\t}\t\t\t// #${places.length + 1}`
+					`\t}`
 				].join("\r\n")
 			);
 		}
