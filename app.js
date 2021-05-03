@@ -23,19 +23,20 @@ function SaveUsers() {
 		for(var id in users) {
 			places.unshift(
 				[
-					`\t"${id}":{`,
+					`\t"${id}":{\t// #${places.length + 1}`,
 					`\t\t"gps":"${users[id].gps}",`,
-					`\t\t"msg":"${users[id].msg}",`,
+					`\t\t"msg":"${users[id].msg}",\t// Чат`,
 					`\t\t"pos":"${users[id].pos}",`,
-					`\t\t"city":"${users[id].city}",`,
-					`\t\t"country":"${users[id].country}",`,
-					`\t\t"visits":"${users[id].visits}",`,
-					`\t\t"voyages":"${users[id].voyages}",`,
+					`\t\t"city":"${users[id].city}",\t// Город`,
+					`\t\t"country":"${users[id].country}",\t// Страна`,
+					`\t\t"visits":"${users[id].visits}",\t// Посещений`,
+					`\t\t"voyages":"${users[id].voyages}",\t// Перемещений`,
 					`\t\t"date":"${users[id].date}"`,
-					`\t}`
+					`\t}\t\t\t// #${places.length + 1}`
 				].join("\r\n")
 			);
 		}
+		places.unshift(`// Users / Гости -- ${places.length}`);
 		hHotRef.child("places").set(places.join(",\r\n"));
 	} catch(e) {
 		console.log(e);
